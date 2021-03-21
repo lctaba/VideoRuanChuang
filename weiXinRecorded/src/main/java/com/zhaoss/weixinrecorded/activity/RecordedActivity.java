@@ -1,5 +1,6 @@
 package com.zhaoss.weixinrecorded.activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.hardware.Camera;
@@ -86,7 +87,10 @@ public class RecordedActivity extends BaseActivity {
         setContentView(R.layout.activity_recorded);
 
         LanSoEditor.initSDK(this, null);
-        LanSongFileUtil.setFileDir("/sdcard/WeiXinRecorded/"+System.currentTimeMillis()+"/");
+        /**
+         * 这边还需要传入一个项目名的参数
+         */
+        LanSongFileUtil.setFileDir(this.getExternalFilesDir(null).getPath()+"/"+System.currentTimeMillis()+"/");
         LibyuvUtil.loadLibrary();
 
         initUI();
