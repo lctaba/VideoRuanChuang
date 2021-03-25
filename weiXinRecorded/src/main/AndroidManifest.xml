@@ -1,5 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.zhaoss.weixinrecorded" >
+    package="com.zhaoss.weixinrecorded">
 
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
@@ -8,14 +9,13 @@
     <application
         android:allowBackup="true"
         android:supportsRtl="true">
-
-        <activity android:name=".activity.RecordedActivity"/>
-        <activity android:name=".activity.EditVideoActivity"
-            android:windowSoftInputMode="adjustResize|adjustPan"/>
-        <activity android:name=".activity.CutSizeActivity"/>
-        <activity android:name=".activity.CutTimeActivity"/>
-
-
+        <activity android:name=".activity.FirstActivity"></activity>
+        <activity android:name=".activity.RecordedActivity" />
+        <activity
+            android:name=".activity.EditVideoActivity"
+            android:windowSoftInputMode="adjustResize|adjustPan" />
+        <activity android:name=".activity.CutSizeActivity" />
+        <activity android:name=".activity.CutTimeActivity" />
     </application>
 
 </manifest>

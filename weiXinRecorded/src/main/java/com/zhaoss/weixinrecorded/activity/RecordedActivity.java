@@ -1,10 +1,10 @@
 package com.zhaoss.weixinrecorded.activity;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.hardware.Camera;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
@@ -40,6 +40,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * Created by zhaoshuang on 19/6/18.
  */
 public class RecordedActivity extends BaseActivity {
+    //取出在主界面创建文件时获得的文件名
+    Intent intent=getIntent();
+    final private  String fileName=intent.getStringExtra("fileName");
 
     public static final String INTENT_PATH = "intent_path";
     public static final String INTENT_DATA_TYPE = "result_data_type";
