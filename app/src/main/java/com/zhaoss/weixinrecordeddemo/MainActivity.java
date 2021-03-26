@@ -14,6 +14,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.zhaoss.weixinrecorded.activity.RecordedActivity;
+import com.zhaoss.weixinrecorded.activity.SelectActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -31,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         Button button_add = findViewById(R.id.button3);
-        Button button_selext = findViewById(R.id.button4);
+        Button button_select = findViewById(R.id.button4);
 
 
         button_add.setOnClickListener(new View.OnClickListener() {
@@ -61,8 +62,14 @@ public class MainActivity extends AppCompatActivity {
                     ;
                 });
                 builder.show();
+            }
+        });
 
-
+        button_select.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, SelectActivity.class);
+                startActivity(intent);
             }
         });
 

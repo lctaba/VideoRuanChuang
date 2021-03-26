@@ -1,4 +1,31 @@
 <resources>
     <string name="Button_add">创建</string>
     <string name="button_select">打开</string>
+
+    <string-array name="arr">
+        <item>视频资源1</item>
+        <item>视频资源12</item>
+        <item>视频资源13</item>
+        <item>视频资源14</item>
+        <item>视频资源15</item>
+        <item>视频资源16</item>
+        <item>视频资源17</item>
+        <item>视频资源19</item>
+        <item>视频资源19</item>
+        <item>视频资源13</item>
+        <item>视频资源14</item>
+        <item>视频资源15</item>
+        <item>视频资源61</item>
+        <item>视频资源71</item>
+        <item>视频资8源1</item>
+        <item>视频资源91</item>
+        <item>视频资源19</item>
+        <item>视频资源13</item>
+        <item>视频资源14</item>
+        <item>视频资源15</item>
+        <item>视频资源61</item>
+        <item>视频资源71</item>
+        <item>视频资8源1</item>
+        <item>视频资源91</item>
+    </string-array>
 </resources>

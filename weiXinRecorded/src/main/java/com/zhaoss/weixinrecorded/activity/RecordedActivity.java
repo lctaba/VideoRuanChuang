@@ -262,6 +262,7 @@ public class RecordedActivity extends BaseActivity {
                 if(segmentList.size() == 0){
                     isShotPhoto.set(true);
                 }
+
             }
         });
 
