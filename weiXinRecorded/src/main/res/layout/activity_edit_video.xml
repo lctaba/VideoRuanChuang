@@ -14,13 +14,14 @@
 
         <TextView
             android:id="@+id/textView2"
-            android:layout_width="57dp"
-            android:layout_height="match_parent"
+            android:layout_width="177dp"
+            android:layout_height="361dp"
             android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
             android:layout_marginEnd="0dp"
             android:layout_marginBottom="0dp"
-            android:text="TextView" />
+            android:text="TextView"
+            android:textColor="@color/color1" />
 
         <RelativeLayout
             android:id="@+id/rl_touch_view"
@@ -30,32 +31,29 @@
             <com.zhaoss.weixinrecorded.view.TuyaView
                 android:id="@+id/tv_video"
                 android:layout_width="667dp"
-                android:layout_height="345dp"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="3dp"
                 android:layout_marginTop="54dp" />
 
             <TextureView
                 android:id="@+id/textureView"
                 android:layout_width="668dp"
-                android:layout_height="341dp"
+                android:layout_height="match_parent"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentTop="true"
-                android:layout_marginStart="2dp"
+                android:layout_marginStart="0dp"
                 android:layout_marginTop="0dp" />
 
-            <ProgressBar
-                android:id="@+id/progressBar2"
-                style="?android:attr/progressBarStyleHorizontal"
-                android:layout_width="669dp"
-                android:layout_height="6dp"
-                android:layout_alignEnd="@+id/textureView"
-                android:layout_alignParentStart="true"
+            <SeekBar
+                android:id="@+id/seekBar"
+                android:layout_width="668dp"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/tv_video"
+                android:layout_alignParentEnd="true"
                 android:layout_alignParentBottom="true"
-                android:layout_marginStart="1dp"
+                android:layout_marginTop="291dp"
                 android:layout_marginEnd="0dp"
-                android:layout_marginBottom="59dp"
-                android:progressDrawable="@drawable/color4"
-                android:progressTint="@color/color1" />
+                android:layout_marginBottom="49dp" />
 
         </RelativeLayout>
 
