@@ -1,10 +1,10 @@
 package com.zhaoss.weixinrecorded.activity;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.hardware.Camera;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
@@ -40,6 +40,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * Created by zhaoshuang on 19/6/18.
  */
 public class RecordedActivity extends BaseActivity {
+
 
     public static final String INTENT_PATH = "intent_path";
     public static final String INTENT_DATA_TYPE = "result_data_type";
@@ -85,6 +86,10 @@ public class RecordedActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_recorded);
+
+        //取出在主界面创建文件时获得的文件名
+        Intent intent=getIntent();
+        String fileName=intent.getStringExtra("fileName");
 
         LanSoEditor.initSDK(this, null);
         /**
@@ -257,6 +262,7 @@ public class RecordedActivity extends BaseActivity {
                 if(segmentList.size() == 0){
                     isShotPhoto.set(true);
                 }
+
             }
         });
 

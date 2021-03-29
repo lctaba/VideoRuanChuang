@@ -70,11 +70,14 @@
             android:id="@+id/ll_thumbnail"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="horizontal"/>
-        <com.zhaoss.weixinrecorded.view.ThumbnailView
-            android:id="@+id/thumbnailView"
-            android:layout_width="match_parent"
-            android:layout_height="50dp" />
+            android:orientation="horizontal">
+
+            <com.zhaoss.weixinrecorded.view.ThumbnailView
+                android:id="@+id/thumbnailView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </LinearLayout>
+
     </RelativeLayout>
 
 </LinearLayout>
