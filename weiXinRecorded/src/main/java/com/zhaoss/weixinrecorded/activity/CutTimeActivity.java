@@ -117,7 +117,7 @@ public class CutTimeActivity extends BaseActivity{
         thumbnailView.setOnScrollBorderListener(new ThumbnailView.OnScrollBorderListener() {
             @Override
             public void OnScrollBorder(float start, float end) {
-                changeTime();
+                changeTime(start,end);
             }
 
             @Override
@@ -223,6 +223,18 @@ public class CutTimeActivity extends BaseActivity{
         startTime = (int) (mMediaInfo.vDuration*1000*pro1);
 
         float right = thumbnailView.getRightInterval();
+        float pro2 = right/ll_thumbnail.getWidth();
+        endTime = (int) (mMediaInfo.vDuration*1000*pro2);
+    }
+
+    private void changeTime(float start,float end){
+
+        float left = start;
+        float pro1 = left/ll_thumbnail.getWidth();
+
+        startTime = (int) (mMediaInfo.vDuration*1000*pro1);
+
+        float right = end;
         float pro2 = right/ll_thumbnail.getWidth();
         endTime = (int) (mMediaInfo.vDuration*1000*pro2);
     }
