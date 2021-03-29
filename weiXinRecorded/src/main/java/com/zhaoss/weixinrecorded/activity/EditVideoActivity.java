@@ -27,6 +27,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -90,6 +91,7 @@ public class EditVideoActivity extends BaseActivity {
     private RelativeLayout rl_icon;
     private RelativeLayout rl_text;
 
+
     private int currentColorPosition;
     private InputMethodManager manager;
     private String path;
@@ -105,6 +107,7 @@ public class EditVideoActivity extends BaseActivity {
     private float executeProgress;//编译进度
     private MediaPlayer mMediaPlayer;
 
+    private SeekBar seekBar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -342,6 +345,29 @@ public class EditVideoActivity extends BaseActivity {
                 }
             });
             mMediaPlayer.prepareAsync();
+
+            seekBar=findViewById(R.id.seekBar);
+            seekBar.setMax(mMediaPlayer.getDuration());
+            seekBar.setProgress(mMediaPlayer.getCurrentPosition());
+            seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                @Override
+                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                if (fromUser==true){
+                    mMediaPlayer.seekTo(progress);
+                }
+                    }
+
+                @Override
+                public void onStartTrackingTouch(SeekBar seekBar) {
+
+                }
+
+                @Override
+                public void onStopTrackingTouch(SeekBar seekBar) {
+
+                }
+            });
+
         }catch (Exception e){
             e.printStackTrace();
         }

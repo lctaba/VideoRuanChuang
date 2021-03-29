@@ -6,25 +6,57 @@
     android:layout_height="match_parent"
     android:background="#000">
 
-    <TextureView
-        android:id="@+id/textureView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_centerInParent="true"/>
-
     <RelativeLayout
         android:id="@+id/rl_tuya"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_centerInParent="true">
-        <com.zhaoss.weixinrecorded.view.TuyaView
-            android:id="@+id/tv_video"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="177dp"
+            android:layout_height="361dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginEnd="0dp"
+            android:layout_marginBottom="0dp"
+            android:text="TextView"
+            android:textColor="@color/color1" />
+
         <RelativeLayout
             android:id="@+id/rl_touch_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_width="670dp"
+            android:layout_height="match_parent">
+
+            <com.zhaoss.weixinrecorded.view.TuyaView
+                android:id="@+id/tv_video"
+                android:layout_width="667dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="3dp"
+                android:layout_marginTop="54dp" />
+
+            <TextureView
+                android:id="@+id/textureView"
+                android:layout_width="668dp"
+                android:layout_height="match_parent"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginStart="0dp"
+                android:layout_marginTop="0dp" />
+
+            <SeekBar
+                android:id="@+id/seekBar"
+                android:layout_width="668dp"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/tv_video"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginTop="291dp"
+                android:layout_marginEnd="0dp"
+                android:layout_marginBottom="49dp" />
+
+        </RelativeLayout>
+
     </RelativeLayout>
 
     <RelativeLayout
@@ -124,21 +156,25 @@
         android:background="#dd2B2B2B"
         android:visibility="gone"
         android:layout_alignParentBottom="true"/>
+
     <RelativeLayout
         android:id="@+id/rl_bottom"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
+
         <LinearLayout
             android:id="@+id/ll_bottom"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:background="#dd2B2B2B"
-            android:layout_alignParentBottom="true">
+            android:layout_alignParentBottom="true"
+            android:background="#dd2B2B2B">
+
             <RelativeLayout
                 android:id="@+id/rl_pen"
                 android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="50dp">
+                android:layout_height="50dp"
+                android:layout_weight="1">
+
                 <ImageView
                     android:id="@+id/iv_pen"
                     android:layout_width="20dp"
@@ -146,11 +182,13 @@
                     android:layout_centerInParent="true"
                     android:src="@mipmap/pen" />
             </RelativeLayout>
+
             <RelativeLayout
                 android:id="@+id/rl_icon"
                 android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="50dp">
+                android:layout_height="50dp"
+                android:layout_weight="1">
+
                 <ImageView
                     android:id="@+id/iv_icon"
                     android:layout_width="20dp"
@@ -158,22 +196,26 @@
                     android:layout_centerInParent="true"
                     android:src="@mipmap/icon" />
             </RelativeLayout>
+
             <RelativeLayout
                 android:id="@+id/rl_text"
                 android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="50dp">
+                android:layout_height="50dp"
+                android:layout_weight="1">
+
                 <ImageView
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:layout_centerInParent="true"
                     android:src="@mipmap/text_click" />
             </RelativeLayout>
+
             <RelativeLayout
                 android:id="@+id/rl_speed"
                 android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="50dp">
+                android:layout_height="50dp"
+                android:layout_weight="1">
+
                 <ImageView
                     android:id="@+id/iv_speed"
                     android:layout_width="20dp"
@@ -181,22 +223,26 @@
                     android:layout_centerInParent="true"
                     android:src="@mipmap/speed" />
             </RelativeLayout>
+
             <RelativeLayout
                 android:id="@+id/rl_cut_size"
                 android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="50dp">
+                android:layout_height="50dp"
+                android:layout_weight="1">
+
                 <ImageView
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:layout_centerInParent="true"
                     android:src="@mipmap/cut_size" />
             </RelativeLayout>
+
             <RelativeLayout
                 android:id="@+id/rl_cut_time"
                 android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="50dp">
+                android:layout_height="50dp"
+                android:layout_weight="1">
+
                 <ImageView
                     android:layout_width="20dp"
                     android:layout_height="20dp"
@@ -209,31 +255,34 @@
             android:id="@+id/v_line"
             android:layout_width="match_parent"
             android:layout_height="1px"
-            android:background="#3C3E40"
-            android:layout_above="@id/ll_bottom"/>
+            android:layout_above="@id/ll_bottom"
+            android:background="#3C3E40" />
 
         <LinearLayout
             android:id="@+id/ll_color"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="gone"
-            android:background="#dd2B2B2B"
             android:layout_above="@id/v_line"
-            android:orientation="horizontal">
+            android:background="#dd2B2B2B"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
             <View
                 android:layout_width="1px"
                 android:layout_height="40dp"
                 android:layout_gravity="center_vertical"
-                android:background="#3C3E40"/>
+                android:background="#3C3E40" />
+
             <RelativeLayout
                 android:id="@+id/rl_back"
                 android:layout_width="80dp"
                 android:layout_height="60dp">
+
                 <ImageView
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:layout_centerInParent="true"
-                    android:src="@mipmap/edit_delete"/>
+                    android:src="@mipmap/edit_delete" />
             </RelativeLayout>
         </LinearLayout>
 
@@ -241,52 +290,57 @@
             android:id="@+id/rl_expression"
             android:layout_width="match_parent"
             android:layout_height="180dp"
-            android:background="#f4f4f4"
             android:layout_above="@id/v_line"
-            android:visibility="gone"/>
+            android:background="#f4f4f4"
+            android:visibility="gone" />
 
         <LinearLayout
             android:id="@+id/ll_progress"
             android:layout_width="match_parent"
             android:layout_height="80dp"
-            android:background="#dd2B2B2B"
             android:layout_above="@id/v_line"
-            android:orientation="vertical"
+            android:background="#dd2B2B2B"
             android:gravity="center_horizontal"
+            android:orientation="vertical"
             android:visibility="gone">
+
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="14sp"
+                    android:text="调整视频播放速度为:"
                     android:textColor="#f4f4f4"
-                    android:text="调整视频播放速度为:"/>
+                    android:textSize="14sp" />
+
                 <TextView
                     android:id="@+id/tv_speed"
                     android:layout_width="40dp"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:textSize="14sp"
+                    android:text="1"
                     android:textColor="#E8391A"
-                    android:text="1"/>
+                    android:textSize="14sp" />
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="14sp"
+                    android:text="倍"
                     android:textColor="#f4f4f4"
-                    android:text="倍"/>
+                    android:textSize="14sp" />
             </LinearLayout>
+
             <SeekBar
                 android:id="@+id/sb_speed"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:maxHeight="50dp"
-                android:layout_marginTop="10dp"/>
+                android:layout_marginTop="10dp"
+                android:maxHeight="50dp" />
         </LinearLayout>
 
     </RelativeLayout>
