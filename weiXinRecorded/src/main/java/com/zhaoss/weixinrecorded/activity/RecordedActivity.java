@@ -1,4 +1,4 @@
-package com.zhaoss.weixinrecorded.activity;
+  package com.zhaoss.weixinrecorded.activity;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
