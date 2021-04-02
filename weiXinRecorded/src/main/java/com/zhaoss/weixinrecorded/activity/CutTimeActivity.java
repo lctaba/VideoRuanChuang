@@ -293,7 +293,7 @@ public class CutTimeActivity extends BaseActivity{
             public void onExecute() {
                 File[] files = new File(frameDir).listFiles();
                 if(files != null){
-                    for (int x = 0; x < files.length; x++) {
+                    for (int x = 1; x < files.length; x++) {
                         String framePath = files[x].getAbsolutePath();
                         if (x < ll_thumbnail.getChildCount()) {
                             ImageView imageView = (ImageView) ll_thumbnail.getChildAt(x);

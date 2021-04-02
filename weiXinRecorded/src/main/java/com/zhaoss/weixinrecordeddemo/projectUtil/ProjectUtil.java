@@ -2,6 +2,12 @@ package com.zhaoss.weixinrecordeddemo.projectUtil;
 
 import android.util.Xml;
 
+import com.projectUtil.ErrorType;
+import com.projectUtil.ErrorVideo;
+import com.projectUtil.Project;
+import com.projectUtil.Subtitle;
+import com.projectUtil.VideoClip;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -200,7 +206,7 @@ public class ProjectUtil {
      * @param name 项目名
      * @return
      */
-    public static Project parse(String path,String name){
+    public static Project parse(String path, String name){
         File file = new File(path+"/"+name+"/project.xml");
         Project project = new Project();
 

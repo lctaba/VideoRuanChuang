@@ -1,4 +1,4 @@
-package com.zhaoss.weixinrecordeddemo.projectUtil;
+package com.projectUtil;
 
 /**
  * @Author cyh
@@ -6,9 +6,9 @@ package com.zhaoss.weixinrecordeddemo.projectUtil;
  */
 public class Subtitle {
     //字幕在对应的视频片段中对应的时间（相对时间）
-    Integer startTime;
-    Integer endTime;
-    String subtitle;
+    public Integer startTime;
+    public Integer endTime;
+    public String subtitle;
 
     public Subtitle() {
     }

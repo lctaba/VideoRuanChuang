@@ -1,4 +1,4 @@
-package com.zhaoss.weixinrecordeddemo.projectUtil;
+package com.projectUtil;
 
 import java.util.ArrayList;
 import java.util.List;
