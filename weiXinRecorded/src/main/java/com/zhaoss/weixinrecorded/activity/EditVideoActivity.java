@@ -25,6 +25,7 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -111,6 +112,7 @@ public class EditVideoActivity extends BaseActivity {
     private MediaPlayer mMediaPlayer;
 
     private SeekBar seekBar;
+    private Button button_text;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -127,7 +129,7 @@ public class EditVideoActivity extends BaseActivity {
         initData();
         initVideoSize();
         Timer timer=new Timer();
-        timer.schedule(timenrtask,0,500);
+        timer.schedule(timenrtask,0,100);
 
 
 /*        seekBar.setMax(mMediaPlayer.getDuration());
@@ -204,6 +206,8 @@ public class EditVideoActivity extends BaseActivity {
         rl_cut_size = findViewById(R.id.rl_cut_size);
         rl_cut_time = findViewById(R.id.rl_cut_time);
         rl_back = findViewById(R.id.rl_back);
+
+        button_text=findViewById(R.id.button_text);
 
         textureView.setSurfaceTextureListener(new TextureView.SurfaceTextureListener() {
             @Override
@@ -327,6 +331,15 @@ public class EditVideoActivity extends BaseActivity {
                 Intent intent = new Intent(mContext, CutTimeActivity.class);
                 intent.putExtra(RecordedActivity.INTENT_PATH, path);
                 startActivityForResult(intent, 2);
+            }
+        });
+
+        //点击字幕按钮之后跳转到字幕的界面
+        button_text.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(EditVideoActivity.this,TextActivity.class);
+                startActivity(intent);
             }
         });
 

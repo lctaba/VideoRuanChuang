@@ -18,12 +18,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <TextView
-                android:id="@+id/textView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="TextView" />
-
             <com.zhaoss.weixinrecorded.view.TuyaView
                 android:id="@+id/tv_video"
                 android:layout_width="match_parent"
@@ -46,8 +40,8 @@
                 android:layout_height="match_parent"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentBottom="true"
-                android:layout_marginEnd="0dp"
-                android:layout_marginBottom="0dp">
+                android:layout_marginEnd="2dp"
+                android:layout_marginBottom="1dp">
 
                 <LinearLayout
                     android:id="@+id/ll_bottom"
@@ -232,12 +226,23 @@
 
                 <SeekBar
                     android:id="@+id/seekBar"
-                    android:layout_width="411dp"
-                    android:layout_height="232dp"
-                    android:layout_marginStart="-1dp"
-                    android:layout_marginTop="344dp"
+                    android:layout_width="414dp"
+                    android:layout_height="50dp"
+                    android:layout_marginStart="0dp"
+                    android:layout_marginTop="650dp"
                     android:layout_marginEnd="1dp"
                     android:layout_marginBottom="158dp" />
+
+                <TextView
+                    android:id="@+id/textView2"
+                    android:layout_width="match_parent"
+                    android:layout_height="41dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginTop="604dp"
+                    android:layout_marginEnd="0dp"
+                    android:text="这是一行字幕"
+                    android:textColor="@color/color1" />
 
             </RelativeLayout>
 
@@ -267,6 +272,7 @@
             android:textSize="18sp"
             android:layout_centerInParent="true"
             android:text="编辑视频"/>
+
         <TextView
             android:id="@+id/tv_finish_video"
             android:layout_width="wrap_content"
@@ -283,6 +289,22 @@
             android:layout_centerVertical="true"
             android:layout_marginRight="10dp"
             android:text="完成"/>
+
+        <Button
+            android:id="@+id/button_text"
+            android:layout_width="wrap_content"
+            android:layout_height="37dp"
+            android:layout_marginStart="69dp"
+            android:background="@drawable/yuanjiao"
+            android:paddingLeft="13dp"
+            android:paddingTop="5dp"
+            android:layout_centerVertical="true"
+            android:paddingRight="13dp"
+            android:paddingBottom="5dp"
+            android:text="查看字幕"
+            android:textColor="#fff"
+            android:textSize="14sp" />
+
     </RelativeLayout>
 
     <RelativeLayout
