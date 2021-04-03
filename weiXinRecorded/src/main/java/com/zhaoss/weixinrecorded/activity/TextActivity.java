@@ -52,7 +52,7 @@ public class TextActivity extends AppCompatActivity {
             }
         });
 
-        // 设置ListView的长按事件
+        // 设置ListView的长按事件，后期可以做成单击跳转，长按修改文本内容这样的
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
 
             /**
