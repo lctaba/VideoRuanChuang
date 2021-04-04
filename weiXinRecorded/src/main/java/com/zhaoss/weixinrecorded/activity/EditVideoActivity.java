@@ -126,6 +126,8 @@ public class EditVideoActivity extends BaseActivity {
 
     private SeekBar seekBar;
     private Button button_text;
+    private Button button_check;
+    private ProgressBar progressBar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -225,6 +227,8 @@ public class EditVideoActivity extends BaseActivity {
         rl_back = findViewById(R.id.rl_back);
 
         button_text=findViewById(R.id.button_text);
+        button_check=findViewById(R.id.button_yuyinCheck);
+        progressBar=findViewById(R.id.progressBar);
 
         textureView.setSurfaceTextureListener(new TextureView.SurfaceTextureListener() {
             @Override
@@ -376,6 +380,16 @@ public class EditVideoActivity extends BaseActivity {
             @Override
             public void afterTextChanged(Editable s) {
                 tv_tag.setText(s.toString());
+            }
+        });
+
+        //语音检测按钮
+        button_check.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                progressBar.setVisibility(View.VISIBLE);
+                audioRecognize();
+                progressBar.setVisibility(View.INVISIBLE);
             }
         });
     }
