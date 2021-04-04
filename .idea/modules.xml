@@ -2,9 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/WeiXinRecordedDemo-master.iml" filepath="$PROJECT_DIR$/.idea/modules/WeiXinRecordedDemo-master.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/WeiXinRecordedDemo-master.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/WeiXinRecordedDemo-master.app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/weiXinRecorded/WeiXinRecordedDemo-master.weixinrecorded.iml" filepath="$PROJECT_DIR$/.idea/modules/weiXinRecorded/WeiXinRecordedDemo-master.weixinrecorded.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/VideoRuanChuang.iml" filepath="$PROJECT_DIR$/.idea/VideoRuanChuang.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/VideoRuanChuang.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/VideoRuanChuang.app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/weiXinRecorded/VideoRuanChuang.weixinrecorded.iml" filepath="$PROJECT_DIR$/.idea/modules/weiXinRecorded/VideoRuanChuang.weixinrecorded.iml" />
     </modules>
   </component>
 </project>

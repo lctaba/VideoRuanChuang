@@ -40,6 +40,7 @@ import com.lansosdk.videoeditor.LanSongFileUtil;
 import com.lansosdk.videoeditor.MediaInfo;
 import com.lansosdk.videoeditor.VideoEditor;
 import com.lansosdk.videoeditor.onVideoEditorProgressListener;
+import com.projectUtil.BeCutVideoSpan;
 import com.projectUtil.Project;
 import com.projectUtil.Subtitle;
 import com.projectUtil.VideoClip;
@@ -55,7 +56,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -122,6 +126,11 @@ public class EditVideoActivity extends BaseActivity {
     //项目对象
     private Project project;
     private String auidoPath;
+    //被裁剪的对象列表
+    private Map<Long,BeCutVideoSpan> beCutVideoSpans;
+    //所有片段
+    private List<BeCutVideoSpan> allClips;
+
 
 
     private SeekBar seekBar;
@@ -895,5 +904,38 @@ public class EditVideoActivity extends BaseActivity {
 
     private List<Subtitle> audioRecognize(){
         return AudioToText.getSubtitles(auidoPath);
+    }
+
+    private void combineSubtitlesToProject(){
+        project.videoClips.get(0).subtitles = audioRecognize();
+    }
+
+    private BeCutVideoSpan convertSubtitleTo(Subtitle subtitle){
+        BeCutVideoSpan beCutVideoSpan = new BeCutVideoSpan();
+        beCutVideoSpan.startTime = subtitle.startTime;
+        beCutVideoSpan.endTime = subtitle.endTime;
+        beCutVideoSpan.subtitle = subtitle.subtitle;
+        return beCutVideoSpan;
+    }
+
+    private BeCutVideoSpan convertSubtitleTo(Subtitle subtitle, VideoClip videoClip){
+        Long startTime = videoClip.startTime;
+        BeCutVideoSpan beCutVideoSpan = new BeCutVideoSpan();
+        beCutVideoSpan.startTime = startTime+subtitle.startTime;
+        beCutVideoSpan.endTime = startTime+subtitle.endTime;
+        beCutVideoSpan.subtitle = subtitle.subtitle;
+        return beCutVideoSpan;
+    }
+
+    private List<BeCutVideoSpan> recognizeBeCutVideoSpan(List<Subtitle> subtitles){
+        List<BeCutVideoSpan> beCutVideoSpans = new ArrayList<>();
+        for (Subtitle subtitle : subtitles){
+            beCutVideoSpans.add(convertSubtitleTo(subtitle));
+        }
+        return beCutVideoSpans;
+    }
+
+    private void refreshAllClips(){
+        allClips = recognizeBeCutVideoSpan(audioRecognize());
     }
 }
