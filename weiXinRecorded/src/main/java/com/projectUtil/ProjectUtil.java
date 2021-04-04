@@ -1,6 +1,12 @@
-package com.zhaoss.weixinrecordeddemo.projectUtil;
+package com.projectUtil;
 
 import android.util.Xml;
+
+import com.projectUtil.ErrorType;
+import com.projectUtil.ErrorVideo;
+import com.projectUtil.Project;
+import com.projectUtil.Subtitle;
+import com.projectUtil.VideoClip;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -80,7 +86,7 @@ public class ProjectUtil {
      * @param project
      */
     public static void storeProject(String path,Project project){
-        File dir = new File(path+"/"+project.name);
+        File dir = new File(path);
         if(!dir.exists()){
             dir.mkdir();
         }
@@ -101,9 +107,17 @@ public class ProjectUtil {
 
             //保存所有素材
             serializer.startTag(null,"materials");
-            for(String video:project.videos){
+            for(Video video:project.videos){
                 serializer.startTag(null,"material");
-                serializer.text(video);
+                serializer.startTag(null,"h264Path");
+                serializer.text(video.h264Path);
+                serializer.endTag(null,"h264Path");
+                serializer.startTag(null,"mp4Path");
+                serializer.text(video.mp4Path);
+                serializer.endTag(null,"mp4Path");
+                serializer.startTag(null,"aacPath");
+                serializer.text(video.aacPath);
+                serializer.endTag(null,"aacPath");
                 serializer.endTag(null,"material");
             }
             serializer.endTag(null,"materials");
@@ -116,9 +130,15 @@ public class ProjectUtil {
                 //所属素材,以及在素材中的开始结束时间
                 serializer.startTag(null,"belongTo");
 
-                serializer.startTag(null,"name");
-                serializer.text(videoClip.belongTo);
-                serializer.endTag(null,"name");
+                serializer.startTag(null,"h264Path");
+                serializer.text(videoClip.belongTo.h264Path);
+                serializer.endTag(null,"h264Path");
+                serializer.startTag(null,"mp4Path");
+                serializer.text(videoClip.belongTo.mp4Path);
+                serializer.endTag(null,"mp4Path");
+                serializer.startTag(null,"aacPath");
+                serializer.text(videoClip.belongTo.aacPath);
+                serializer.endTag(null,"aacPath");
 
                 serializer.startTag(null,"start");
                 serializer.text(videoClip.relativeStartTime.toString());
@@ -200,7 +220,7 @@ public class ProjectUtil {
      * @param name 项目名
      * @return
      */
-    public static Project parse(String path,String name){
+    public static Project parse(String path, String name){
         File file = new File(path+"/"+name+"/project.xml");
         Project project = new Project();
 
@@ -285,10 +305,10 @@ public class ProjectUtil {
                 String errorVideoPropertyName = errorVideoProperty.getNodeName();
                 switch (errorVideoPropertyName){
                     case "start":
-                        e.startTime = Integer.parseInt(errorVideoProperty.getNodeValue());
+                        e.startTime = Long.parseLong(errorVideoProperty.getNodeValue());
                         break;
                     case "end":
-                        e.endTime = Integer.parseInt(errorVideoProperty.getNodeValue());
+                        e.endTime = Long.parseLong(errorVideoProperty.getNodeValue());
                         break;
                     case "errorType":
                         e.errorType = ErrorType.valueOf(errorVideoProperty.getNodeValue());
@@ -317,10 +337,10 @@ public class ProjectUtil {
                 String subtitlePropertyName = subtitleProperty.getNodeName();
                 switch (subtitlePropertyName){
                     case "start":
-                        s.startTime = Integer.parseInt(subtitleProperty.getNodeValue());
+                        s.startTime = Long.parseLong(subtitleProperty.getNodeValue());
                         break;
                     case "end":
-                        s.endTime = Integer.parseInt(subtitleProperty.getNodeValue());
+                        s.endTime = Long.parseLong(subtitleProperty.getNodeValue());
                         break;
                     case "text":
                         s.subtitle = subtitleProperty.getNodeValue();
@@ -345,10 +365,10 @@ public class ProjectUtil {
             String spanPropertyName = spanProperty.getNodeName();
             switch (spanPropertyName){
                 case "start":
-                    vc.startTime = Integer.parseInt(spanProperty.getNodeValue());
+                    vc.startTime = Long.parseLong(spanProperty.getNodeValue());
                     break;
                 case "end":
-                    vc.endTime = Integer.parseInt(spanProperty.getNodeValue());
+                    vc.endTime = Long.parseLong(spanProperty.getNodeValue());
                     break;
                 default:
                     break;
@@ -368,13 +388,17 @@ public class ProjectUtil {
             String belongToPropertyName = belongToProperty.getNodeName();
             switch (belongToPropertyName){
                 case "name":
-                    vc.belongTo = belongToProperty.getNodeValue();
+                    Video video = new Video();
+                    NodeList pathList = belongToProperty.getChildNodes();
+                    video.h264Path = pathList.item(1).getNodeValue();
+                    video.mp4Path = pathList.item(2).getNodeValue();
+                    video.aacPath = pathList.item(3).getNodeValue();
                     break;
                 case "start":
-                    vc.relativeStartTime = Integer.parseInt(belongToProperty.getNodeValue());
+                    vc.relativeStartTime = Long.parseLong(belongToProperty.getNodeValue());
                     break;
                 case "end":
-                    vc.relativeEndTime = Integer.parseInt(belongToProperty.getNodeValue());
+                    vc.relativeEndTime = Long.parseLong(belongToProperty.getNodeValue());
                     break;
                 default:
                     break;
@@ -391,7 +415,12 @@ public class ProjectUtil {
         NodeList materials = property.getChildNodes();
         for (int j=0; j<materials.getLength(); j++){
             Node item = materials.item(j);
-            project.videos.add(item.getNodeValue());
+            NodeList pathList = item.getChildNodes();
+            Video video = new Video();
+            video.h264Path = pathList.item(1).getNodeValue();
+            video.mp4Path = pathList.item(2).getNodeValue();
+            video.aacPath = pathList.item(3).getNodeValue();
+            project.videos.add(video);
         }
     }
 }

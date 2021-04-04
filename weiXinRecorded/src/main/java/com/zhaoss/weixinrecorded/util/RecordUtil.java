@@ -138,15 +138,16 @@ public class RecordUtil {
         });
     }
 
+
     private void startWhile(){
         RxJavaUtil.run(new RxJavaUtil.OnRxAndroidListener<Boolean>() {
             @Override
             public Boolean doInBackground() throws Throwable {
-
                 startTime = System.currentTimeMillis();
                 while (isRecording.get() || videoQueue.size()>0) {
                     byte[] videoData = videoQueue.poll();
                     if(videoData != null){
+                        //编码
                         encodeVideo(videoData);
                     }
                 }
@@ -164,6 +165,10 @@ public class RecordUtil {
         });
     }
 
+
+    /**
+     * 将视频编码并读取数据
+     */
     private byte[] configByte;
     private void encodeVideo(byte[] nv21)throws IOException {
 
@@ -179,6 +184,8 @@ public class RecordUtil {
         LibyuvUtil.convertNV21ToI420(nv21, yuvI420, videoWidth, videoHeight);
         LibyuvUtil.compressI420(yuvI420, videoWidth, videoHeight, tempYuvI420, videoWidth, videoHeight, rotation, isFrontCamera);
         LibyuvUtil.convertI420ToNV12(tempYuvI420, nv12, videoWidth, videoHeight);
+
+
 
         //得到编码器的输入和输出流, 输入流写入源数据 输出流读取编码后的数据
         //得到要使用的缓存序列角标
@@ -240,6 +247,10 @@ public class RecordUtil {
         }
     }
 
+    /**
+     * 用于同步帧率信息
+     * 如果一帧的处理时间要大于每一帧的间隔，那么就跳过这一帧
+     */
     private long startTime = 0;
     private int currFrame = 0;
     private boolean checkMaxFrame(){
