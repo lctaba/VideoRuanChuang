@@ -13,6 +13,7 @@ import android.graphics.SurfaceTexture;
 import android.graphics.drawable.BitmapDrawable;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -24,6 +25,7 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -51,8 +53,13 @@ import com.zhaoss.weixinrecorded.view.TuyaView;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+
 import java.net.URISyntaxException;
 import java.util.List;
+
+import java.util.Timer;
+import java.util.TimerTask;
+
 
 /**
  * Created by zhaoshuang on 17/2/21.
@@ -118,6 +125,7 @@ public class EditVideoActivity extends BaseActivity {
 
 
     private SeekBar seekBar;
+    private Button button_text;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -137,7 +145,52 @@ public class EditVideoActivity extends BaseActivity {
         initUI();
         initData();
         initVideoSize();
+        Timer timer=new Timer();
+        timer.schedule(timenrtask,0,100);
+
+
+/*        seekBar.setMax(mMediaPlayer.getDuration());
+        seekBar.setProgress(mMediaPlayer.getCurrentPosition());*/
+
+
     }
+
+    private TimerTask timenrtask=new TimerTask() {
+        @Override
+        public void run() {
+            seekBar=findViewById(R.id.seekBar);
+
+            //进度条
+            try {
+
+                if (mMediaPlayer.isPlaying()){
+                    seekBar.setMax(mMediaPlayer.getDuration());
+                    seekBar.setProgress(mMediaPlayer.getCurrentPosition());
+
+                    seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                        @Override
+                        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                        }
+
+                        @Override
+                        public void onStartTrackingTouch(SeekBar seekBar) {
+
+                        }
+
+                        @Override
+                        public void onStopTrackingTouch(SeekBar seekBar) {
+                            int progress = seekBar.getProgress();//获取seekBar的进度
+                            mMediaPlayer.seekTo(progress);//改变播放进度
+                        }
+                    });
+                }
+
+            }
+            catch(Exception e){
+                e.printStackTrace();
+            }
+        }
+    };
 
     private void initUI() {
 
@@ -171,11 +224,16 @@ public class EditVideoActivity extends BaseActivity {
         rl_cut_time = findViewById(R.id.rl_cut_time);
         rl_back = findViewById(R.id.rl_back);
 
+        button_text=findViewById(R.id.button_text);
+
         textureView.setSurfaceTextureListener(new TextureView.SurfaceTextureListener() {
             @Override
             public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
                 surfaceTexture = surface;
                 initMediaPlay(surface);
+
+
+
             }
             @Override
             public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
@@ -293,6 +351,15 @@ public class EditVideoActivity extends BaseActivity {
             }
         });
 
+        //点击字幕按钮之后跳转到字幕的界面
+        button_text.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(EditVideoActivity.this,TextActivity.class);
+                startActivity(intent);
+            }
+        });
+
         initColors();
         initExpression();
         initSpeed();
@@ -346,10 +413,11 @@ public class EditVideoActivity extends BaseActivity {
     }
 
     private void initMediaPlay(SurfaceTexture surface){
-
         try {
             mMediaPlayer = new MediaPlayer();
             mMediaPlayer.setDataSource(path);
+
+
             mMediaPlayer.setSurface(new Surface(surface));
             mMediaPlayer.setLooping(true);
             mMediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
@@ -360,27 +428,7 @@ public class EditVideoActivity extends BaseActivity {
             });
             mMediaPlayer.prepareAsync();
 
-            seekBar=findViewById(R.id.seekBar);
-            seekBar.setMax(mMediaPlayer.getDuration());
-            seekBar.setProgress(mMediaPlayer.getCurrentPosition());
-            seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-                @Override
-                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                if (fromUser==true){
-                    mMediaPlayer.seekTo(progress);
-                }
-                    }
 
-                @Override
-                public void onStartTrackingTouch(SeekBar seekBar) {
-
-                }
-
-                @Override
-                public void onStopTrackingTouch(SeekBar seekBar) {
-
-                }
-            });
 
         }catch (Exception e){
             e.printStackTrace();
