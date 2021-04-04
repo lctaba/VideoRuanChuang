@@ -151,7 +151,7 @@ public class EditVideoActivity extends BaseActivity {
 
         project = (Project) getIntent().getSerializableExtra("project") ;
         auidoPath = project.videos.get(0).aacPath;
-        audioRecognize();
+
 
         initUI();
         initData();
@@ -398,7 +398,7 @@ public class EditVideoActivity extends BaseActivity {
             public void onClick(View v) {
                 progressBar.setVisibility(View.VISIBLE);
                 audioRecognize();
-                progressBar.setVisibility(View.INVISIBLE);
+                progressBar.setVisibility(View.GONE);
             }
         });
     }

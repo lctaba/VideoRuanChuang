@@ -28,7 +28,7 @@ android {
     packagingOptions {
         exclude 'META-INF/DEPENDENCIES'
 
-//        pickFirst 'META-INF/native-image/ios-x86_64/jnijavacpp/reflect-config.json'
+//         pickFirst 'META-INF/native-image/ios-x86_64/jnijavacpp/reflect-config.json'
 //        pickFirst 'META-INF/native-image/ios-x86_64/jnijavacpp/jni-config.json'
 //
 //        pickFirst 'META-INF/native-image/ios-arm64/jnijavacpp/jni-config.json'
