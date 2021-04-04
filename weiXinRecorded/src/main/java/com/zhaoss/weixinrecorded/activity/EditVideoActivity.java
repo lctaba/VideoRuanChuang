@@ -29,6 +29,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -138,6 +139,9 @@ public class EditVideoActivity extends BaseActivity {
 
     private SeekBar seekBar;
     private Button button_text;
+    private Button button_check;
+    private ProgressBar progressBar;
+    private Button button_video_list;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -164,8 +168,9 @@ public class EditVideoActivity extends BaseActivity {
         timer.schedule(timenrtask,0,100);
 
 
-/*        seekBar.setMax(mMediaPlayer.getDuration());
-        seekBar.setProgress(mMediaPlayer.getCurrentPosition());*/
+
+
+/* */
 
 
     }
@@ -240,6 +245,11 @@ public class EditVideoActivity extends BaseActivity {
         rl_back = findViewById(R.id.rl_back);
 
         button_text=findViewById(R.id.button_text);
+        button_check=findViewById(R.id.button_yuyinCheck);
+        progressBar=findViewById(R.id.progressBar);
+        button_video_list=findViewById(R.id.button_video_list);
+
+
 
         textureView.setSurfaceTextureListener(new TextureView.SurfaceTextureListener() {
             @Override
@@ -371,6 +381,26 @@ public class EditVideoActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 Intent intent=new Intent(EditVideoActivity.this,TextActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        //语音检测
+        button_check.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                progressBar.setVisibility(View.VISIBLE);
+                audioRecognize();
+                progressBar.setVisibility(View.GONE);
+            }
+        });
+
+        //点击之后跳转到视频列表界面
+        //TODO:应该还需要获取当前的视频，然后用intent传过去
+        button_video_list.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(EditVideoActivity.this,CutVideoActivity.class);
                 startActivity(intent);
             }
         });

@@ -9,7 +9,8 @@
     <application
         android:allowBackup="true"
         android:supportsRtl="true">
-        <activity android:name=".activity.TextActivity"></activity>
+        <activity android:name=".activity.CutVideoActivity"></activity>
+        <activity android:name=".activity.TextActivity" />
         <activity android:name=".activity.RecordedActivity" />
         <activity
             android:name=".activity.EditVideoActivity"
