@@ -74,6 +74,9 @@ public class CameraHelp {
     //摄像大小
     private int[] getPreviewSize(){
 
+        /**
+         * 若能适配则直接启用适配的大小
+         */
         int[] previewSize = new int[2];
         Camera.Parameters parameters = mCamera.getParameters();
         List<Camera.Size> supportedPreviewSizes = parameters.getSupportedPreviewSizes();
@@ -86,6 +89,9 @@ public class CameraHelp {
             }
         }
 
+        /**
+         * 不能适配选差距最小的
+         */
         int difference = 0;
         int position = 0;
         for (int x = 0; x < supportedPreviewSizes.size(); x++) {
@@ -107,6 +113,9 @@ public class CameraHelp {
         return cameraId;
     }
 
+    /**
+     * 应该是是否开启闪光灯,转换闪光灯模式
+     */
     public void changeFlash(){
         if(mCamera != null){
             Camera.Parameters parameters = mCamera.getParameters();

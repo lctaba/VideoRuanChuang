@@ -1,6 +1,7 @@
 package com.zhaoss.weixinrecordeddemo;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.MediaPlayer;
@@ -13,6 +14,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.AI.Audio.AudioToText;
 import com.zhaoss.weixinrecorded.activity.RecordedActivity;
 import com.zhaoss.weixinrecorded.activity.SelectActivity;
 
@@ -33,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
 
         Button button_add = findViewById(R.id.button3);
         Button button_select = findViewById(R.id.button4);
-
+        Button button_audioRecognition = findViewById(R.id.button5);
 
         button_add.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -70,6 +72,13 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, SelectActivity.class);
                 startActivity(intent);
+            }
+        });
+
+        button_audioRecognition.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AudioToText.getMessage(getExternalFilesDir(null).getPath()+"/1617115770082/21330224941215.m4a");
             }
         });
 

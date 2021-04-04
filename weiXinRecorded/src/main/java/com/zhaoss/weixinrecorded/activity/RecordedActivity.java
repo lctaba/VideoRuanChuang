@@ -1,8 +1,11 @@
   package com.zhaoss.weixinrecorded.activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.YuvImage;
 import android.hardware.Camera;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.SurfaceHolder;
@@ -14,11 +17,20 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.AI.image.ImageHandler;
+import com.AI.image.ImagePiece;
+import com.AI.image.OpencvUnit;
 import com.lansosdk.videoeditor.LanSoEditor;
 import com.lansosdk.videoeditor.LanSongFileUtil;
 import com.lansosdk.videoeditor.VideoEditor;
 import com.lansosdk.videoeditor.onVideoEditorProgressListener;
 import com.libyuv.LibyuvUtil;
+import com.projectUtil.ErrorType;
+import com.projectUtil.ErrorVideo;
+import com.projectUtil.Project;
+import com.projectUtil.ProjectUtil;
+import com.projectUtil.Video;
+import com.projectUtil.VideoClip;
 import com.zhaoss.weixinrecorded.R;
 import com.zhaoss.weixinrecorded.util.CameraHelp;
 import com.zhaoss.weixinrecorded.util.MyVideoEditor;
@@ -28,11 +40,15 @@ import com.zhaoss.weixinrecorded.util.Utils;
 import com.zhaoss.weixinrecorded.view.LineProgressView;
 import com.zhaoss.weixinrecorded.view.RecordView;
 
+import org.opencv.core.Core;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * 仿微信录制视频
@@ -40,7 +56,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * Created by zhaoshuang on 19/6/18.
  */
 public class RecordedActivity extends BaseActivity {
-
 
     public static final String INTENT_PATH = "intent_path";
     public static final String INTENT_DATA_TYPE = "result_data_type";
@@ -50,7 +65,7 @@ public class RecordedActivity extends BaseActivity {
 
     public static final int REQUEST_CODE_KEY = 100;
 
-    public static final float MAX_VIDEO_TIME = 10f*1000;  //最大录制时间
+    public static final float MAX_VIDEO_TIME = 10f*10000;  //最大录制时间
     public static final float MIN_VIDEO_TIME = 2f*1000;  //最小录制时间
 
     private SurfaceView surfaceView;
@@ -81,26 +96,40 @@ public class RecordedActivity extends BaseActivity {
     private String audioPath;
     private RecordUtil.OnPreviewFrameListener mOnPreviewFrameListener;
 
+    private ImageHandler imageHandler;
+
+    //当前录制的视频片段
+    private VideoClip videoClip;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_recorded);
 
-        //取出在主界面创建文件时获得的文件名
-        Intent intent=getIntent();
-        String fileName=intent.getStringExtra("fileName");
 
         LanSoEditor.initSDK(this, null);
         /**
          * 这边还需要传入一个项目名的参数
          */
-        LanSongFileUtil.setFileDir(this.getExternalFilesDir(null).getPath()+"/"+System.currentTimeMillis()+"/");
+        LanSongFileUtil.setFileDir(this.getExternalFilesDir(null).getPath()+"/"+ getIntent().getStringExtra("fileName")+"/");
+        /**
+         * 初始化so库
+         */
         LibyuvUtil.loadLibrary();
 
         initUI();
         initData();
         initMediaRecorder();
+        videoClip = new VideoClip();
+        videoClip.startTime = 0L;
+        videoClip.relativeStartTime = 0L;
+
+        /**
+         * 图像处理库
+         */
+        imageHandler = new ImageHandler(this);
+        imageHandler.initClient();
     }
 
     private void initUI() {
@@ -134,6 +163,10 @@ public class RecordedActivity extends BaseActivity {
         });
     }
 
+
+    private AtomicInteger frameTime = new AtomicInteger();
+    private AtomicInteger recognitionTime = new AtomicInteger();
+    private AtomicInteger gestureType = new AtomicInteger();
     private void initMediaRecorder() {
         mCameraHelp.setPreviewCallback(new Camera.PreviewCallback() {
             @Override
@@ -144,6 +177,19 @@ public class RecordedActivity extends BaseActivity {
                 }else{
                     if(isRecordVideo.get() && mOnPreviewFrameListener!=null){
                         mOnPreviewFrameListener.onPreviewFrame(data);
+                        frameTime.addAndGet(1);
+                        if(frameTime.get() >= 12){
+                            frameTime.set(0);
+                            new Thread(new GestureThread(data)).start();
+                            new Thread(new BlurThread(data)).start();
+                        }
+                    }else if(!isRecordVideo.get() && mOnPreviewFrameListener!=null){
+                        mOnPreviewFrameListener.onPreviewFrame(data);
+                        frameTime.addAndGet(1);
+                        if(frameTime.get() >= 12){
+                            frameTime.set(0);
+                            new Thread(new GestureThread(data)).start();
+                        }
                     }
                 }
             }
@@ -180,6 +226,168 @@ public class RecordedActivity extends BaseActivity {
                 }
                 int pro = (int) (executeProgress/executeCount*100);
                 editorTextView.setText("视频编辑中"+pro+"%");
+            }
+        });
+    }
+
+    AtomicInteger blurTimes = new AtomicInteger();
+    AtomicBoolean isInBlurTime = new AtomicBoolean(false);
+    AtomicLong blurStartTime = new AtomicLong();
+    AtomicLong blurEndTime = new AtomicLong();
+    class BlurThread implements Runnable{
+        private final byte[] data;
+        BlurThread(final byte[] data){
+            this.data = data;
+        }
+        @Override
+        public void run() {
+            Bitmap bitmap = getBitmapFromPreview(data);
+            Log.i("blur", "recognize blur");
+            if(OpencvUnit.isBlurByLaplacian(bitmap)){
+                Log.i("blur", "is blur");
+                blurTimes.addAndGet(1);
+                if(blurTimes.get()>=2){
+                    long countTime = videoDuration;
+                    for(Long time : timeList){
+                        countTime+=time;
+                    }
+                    if(!isInBlurTime.get()){
+                        blurStartTime.set(countTime);
+                    }
+                    isInBlurTime.set(true);
+                    Log.i("blur", "is really blur");
+                }
+            }else {
+                Log.i("blur", "is not blur");
+                if(isInBlurTime.get()){
+                    isInBlurTime.set(false);
+                    long countTime = videoDuration;
+                    for(Long time : timeList){
+                        countTime+=time;
+                    }
+                    blurEndTime.set(countTime);
+                    videoClip.errorVideos.add(new ErrorVideo(blurStartTime.get(),blurEndTime.get(), ErrorType.PICTURE_ERROR));
+                }
+                blurTimes.set(0);
+            }
+        }
+    }
+
+    AtomicBoolean isStart = new AtomicBoolean(false);
+    class GestureThread implements Runnable{
+        private final byte[] data;
+        GestureThread(final byte[] data){
+            this.data = data;
+        }
+        @Override
+        public void run() {
+            Bitmap bitmap = getBitmapFromPreview(data);
+            try{
+                int gType = imageHandler.startOrStop(new ImagePiece(bitmap));
+                synchronized(GestureThread.class) {
+                    if(gType == gestureType.get() && gType!=0){
+                        recognitionTime.addAndGet(1);
+                    }else {
+                        gestureType.set(gType);
+                        recognitionTime.set(0);
+                    }
+                    if(recognitionTime.get()>=3){
+                        //Toast.makeText(getApplicationContext(),gestureType.toString(),Toast.LENGTH_SHORT).show();
+                        if(gType == 1){
+                            isStart.set(false);
+                            isRecordVideo.set(false);
+                            upEvent();
+                            Log.i("", "run: 1");
+                        }else if(gType == 2){
+                            if(!isStart.get()){
+                                isStart.set(true);
+                                isRecordVideo.set(true);
+                                startRecord();
+                                goneRecordLayout();
+                                Log.i("", "run: 2");
+                            }
+                        }
+                    }
+                }
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+    }
+
+    /**
+     * 从预览界面获取bitmap
+     * @return
+     */
+    public Bitmap getBitmapFromPreview(final byte[] data) {
+        boolean isFrontCamera = mCameraHelp.getCameraId()== Camera.CameraInfo.CAMERA_FACING_FRONT;
+        int rotation;
+        if(isFrontCamera){
+            rotation = 270;
+        }else{
+            rotation = 90;
+        }
+
+        byte[] yuvI420 = new byte[data.length];
+        byte[] tempYuvI420 = new byte[data.length];
+
+        int videoWidth =  mCameraHelp.getHeight();
+        int videoHeight =  mCameraHelp.getWidth();
+
+        LibyuvUtil.convertNV21ToI420(data, yuvI420, mCameraHelp.getWidth(), mCameraHelp.getHeight());
+        LibyuvUtil.compressI420(yuvI420, mCameraHelp.getWidth(), mCameraHelp.getHeight(), tempYuvI420,
+                mCameraHelp.getWidth(), mCameraHelp.getHeight(), rotation, isFrontCamera);
+
+        Bitmap bitmap = Bitmap.createBitmap(videoWidth, videoHeight, Bitmap.Config.ARGB_8888);
+
+        LibyuvUtil.convertI420ToBitmap(tempYuvI420, bitmap, videoWidth, videoHeight);
+        return bitmap;
+    }
+
+    /**
+     * 处理手势识别的线程
+     */
+    private void gestureRecognition(final byte[] data){
+        RxJavaUtil.run(new RxJavaUtil.OnRxAndroidListener<Void>() {
+
+            @Override
+            public Void doInBackground() throws Throwable {
+                boolean isFrontCamera = mCameraHelp.getCameraId()== Camera.CameraInfo.CAMERA_FACING_FRONT;
+                int rotation;
+                if(isFrontCamera){
+                    rotation = 270;
+                }else{
+                    rotation = 90;
+                }
+
+                byte[] yuvI420 = new byte[data.length];
+                byte[] tempYuvI420 = new byte[data.length];
+
+                int videoWidth =  mCameraHelp.getHeight();
+                int videoHeight =  mCameraHelp.getWidth();
+
+                LibyuvUtil.convertNV21ToI420(data, yuvI420, mCameraHelp.getWidth(), mCameraHelp.getHeight());
+                LibyuvUtil.compressI420(yuvI420, mCameraHelp.getWidth(), mCameraHelp.getHeight(), tempYuvI420,
+                        mCameraHelp.getWidth(), mCameraHelp.getHeight(), rotation, isFrontCamera);
+
+                Bitmap bitmap = Bitmap.createBitmap(videoWidth, videoHeight, Bitmap.Config.ARGB_8888);
+
+                LibyuvUtil.convertI420ToBitmap(tempYuvI420, bitmap, videoWidth, videoHeight);
+
+                if(imageHandler.startOrStop(new ImagePiece(bitmap)) != 0){
+                    Toast.makeText(getApplicationContext(),"停止录像",Toast.LENGTH_SHORT).show();
+                }
+                return null;
+            }
+
+            @Override
+            public void onFinish(Void result) {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                //Toast.makeText(getApplicationContext(), "手势识别失败", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -245,24 +453,37 @@ public class RecordedActivity extends BaseActivity {
         recordView.setOnGestureListener(new RecordView.OnGestureListener() {
             @Override
             public void onDown() {
+                /**
                 //长按录像
                 isRecordVideo.set(true);
                 startRecord();
                 goneRecordLayout();
+                 */
             }
             @Override
             public void onUp() {
+                /**
                 if(isRecordVideo.get()){
                     isRecordVideo.set(false);
                     upEvent();
                 }
+                 */
             }
             @Override
             public void onClick() {
+                /**
                 if(segmentList.size() == 0){
                     isShotPhoto.set(true);
                 }
-
+                 */
+                if(isRecordVideo.get()){
+                    isRecordVideo.set(false);
+                    upEvent();
+                }else {
+                    isRecordVideo.set(true);
+                    startRecord();
+                    goneRecordLayout();
+                }
             }
         });
 
@@ -307,27 +528,54 @@ public class RecordedActivity extends BaseActivity {
         });
     }
 
+    String storeH264Path;
+    String storeMp4Path;
+    String storeAacPath;
     public void finishVideo(){
         RxJavaUtil.run(new RxJavaUtil.OnRxAndroidListener<String>() {
             @Override
             public String doInBackground()throws Exception{
                 //合并h264
-                String h264Path = LanSongFileUtil.DEFAULT_DIR+System.currentTimeMillis()+".h264";
+                storeH264Path = LanSongFileUtil.DEFAULT_DIR+System.currentTimeMillis()+".h264";
+                String h264Path = storeH264Path;
                 Utils.mergeFile(segmentList.toArray(new String[]{}), h264Path);
                 //h264转mp4
-                String mp4Path = LanSongFileUtil.DEFAULT_DIR+System.currentTimeMillis()+".mp4";
+                storeMp4Path = LanSongFileUtil.DEFAULT_DIR+System.currentTimeMillis()+".mp4";
+                String mp4Path = storeMp4Path;
                 mVideoEditor.h264ToMp4(h264Path, mp4Path);
                 //合成音频
-                String aacPath = mVideoEditor.executePcmEncodeAac(syntPcm(), RecordUtil.sampleRateInHz, RecordUtil.channelCount);
+                storeAacPath = mVideoEditor.executePcmEncodeAac(syntPcm(), RecordUtil.sampleRateInHz, RecordUtil.channelCount);
+                String aacPath = storeAacPath;
                 //音视频混合
                 mp4Path = mVideoEditor.executeVideoMergeAudio(mp4Path, aacPath);
+                //裁剪只剩0-5秒
+                //mp4Path = mVideoEditor.executeCutVideoExact(mp4Path, 0, 5);
                 return mp4Path;
+
             }
             @Override
             public void onFinish(String result) {
                 closeProgressDialog();
                 Intent intent = new Intent(mContext, EditVideoActivity.class);
+                //将项目的信息序列化储存
+                Project project = new Project();
+                project.name = getIntent().getStringExtra("fileName");
+                Video video = new Video();
+                video.h264Path = storeH264Path;
+                video.aacPath = storeAacPath;
+                video.mp4Path = storeMp4Path;
+                project.videos.add(video);
+                Long countTime = 0L;
+                for (Long time : timeList){
+                    countTime+=time;
+                }
+                videoClip.endTime = countTime;
+                videoClip.relativeEndTime = countTime;
+                videoClip.belongTo = video;
+                project.videoClips.add(videoClip);
+                ProjectUtil.storeProject(LanSongFileUtil.DEFAULT_DIR,project);
                 intent.putExtra(INTENT_PATH, result);
+                intent.putExtra("project",project);
                 startActivityForResult(intent, REQUEST_CODE_KEY);
             }
             @Override
@@ -366,7 +614,7 @@ public class RecordedActivity extends BaseActivity {
         iv_next.setVisibility(View.GONE);
     }
 
-    private long videoDuration;
+    private volatile long videoDuration;
     private long recordTime;
     private String videoPath;
     private void startRecord(){
@@ -388,7 +636,7 @@ public class RecordedActivity extends BaseActivity {
             }
             @Override
             public void onFinish(Boolean result) {
-                if(recordView.isDown()){
+                if(isRecordVideo.get()){
                     mOnPreviewFrameListener = recordUtil.start();
                     videoDuration = 0;
                     lineProgressView.setSplit();
@@ -488,11 +736,19 @@ public class RecordedActivity extends BaseActivity {
             iv_delete.setVisibility(View.GONE);
         }
 
+        /**
         if (lineProgressView.getProgress()* MAX_VIDEO_TIME < MIN_VIDEO_TIME) {
             iv_next.setVisibility(View.GONE);
         } else {
             iv_next.setVisibility(View.VISIBLE);
         }
+         */
+        if(isRecordVideo.get()){
+            iv_next.setVisibility(View.GONE);
+        }else {
+            iv_next.setVisibility(View.VISIBLE);
+        }
+
     }
 
     /**
@@ -524,6 +780,9 @@ public class RecordedActivity extends BaseActivity {
         }
         if(recordUtil != null) {
             recordUtil.stop();
+        }
+        if(imageHandler != null){
+            imageHandler.closeClient();
         }
     }
 
