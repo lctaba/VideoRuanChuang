@@ -1,4 +1,4 @@
-package com.zhaoss.weixinrecorded.activity;
+  package com.zhaoss.weixinrecorded.activity;
 
 import android.content.Context;
 import android.content.Intent;
