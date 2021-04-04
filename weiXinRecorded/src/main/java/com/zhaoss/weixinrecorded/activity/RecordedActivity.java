@@ -49,7 +49,10 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
-/**
+import static android.hardware.Camera.Parameters.FLASH_MODE_OFF;
+import static android.hardware.Camera.Parameters.FLASH_MODE_ON;
+
+  /**
  * 仿微信录制视频
  * 基于ffmpeg视频编译
  * Created by zhaoshuang on 19/6/18.
@@ -182,12 +185,12 @@ public class RecordedActivity extends BaseActivity {
                             new Thread(new GestureThread(data)).start();
                             new Thread(new BlurThread(data)).start();
                         }
-                    }else if(!isRecordVideo.get() && mOnPreviewFrameListener!=null){
-                        mOnPreviewFrameListener.onPreviewFrame(data);
-                        frameTime.addAndGet(1);
-                        if(frameTime.get() >= 12){
-                            frameTime.set(0);
-                            new Thread(new GestureThread(data)).start();
+                        }else if(!isRecordVideo.get() && mOnPreviewFrameListener!=null){
+                            mOnPreviewFrameListener.onPreviewFrame(data);
+                            frameTime.addAndGet(1);
+                            if(frameTime.get() >= 12){
+                                frameTime.set(0);
+                                new Thread(new GestureThread(data)).start();
                         }
                     }
                 }
@@ -243,23 +246,33 @@ public class RecordedActivity extends BaseActivity {
             Bitmap bitmap = getBitmapFromPreview(data);
             Log.i("blur", "recognize blur");
             if(OpencvUnit.isBlurByLaplacian(bitmap)){
-                Log.i("blur", "is blur");
-                blurTimes.addAndGet(1);
-                if(blurTimes.get()>=2){
-                    long countTime = videoDuration;
+                long countTime = 0;
+                if(blurTimes.get() == 0){
+                    countTime = videoDuration;
                     for(Long time : timeList){
                         countTime+=time;
                     }
+                }
+                Log.i("blur", "is blur");
+                blurTimes.addAndGet(1);
+                if(blurTimes.get()>=2){
                     if(!isInBlurTime.get()){
                         blurStartTime.set(countTime);
                     }
                     isInBlurTime.set(true);
+                    if(!mCameraHelp.isFlashOpen()){
+                        mCameraHelp.changeFlash();
+                    }
                     Log.i("blur", "is really blur");
                 }
             }else {
                 Log.i("blur", "is not blur");
                 if(isInBlurTime.get()){
+                    Log.i("blur", "change to not blur");
                     isInBlurTime.set(false);
+                    if(mCameraHelp.isFlashOpen()){
+                        mCameraHelp.changeFlash();
+                    }
                     long countTime = videoDuration;
                     for(Long time : timeList){
                         countTime+=time;
@@ -297,6 +310,9 @@ public class RecordedActivity extends BaseActivity {
                             isRecordVideo.set(false);
                             upEvent();
                             Log.i("", "run: 1");
+                            mCameraHelp.changeFlash();
+                            Thread.sleep(500);
+                            mCameraHelp.changeFlash();
                         }else if(gType == 2){
                             if(!isStart.get()){
                                 isStart.set(true);
@@ -304,6 +320,9 @@ public class RecordedActivity extends BaseActivity {
                                 startRecord();
                                 goneRecordLayout();
                                 Log.i("", "run: 2");
+                                mCameraHelp.changeFlash();
+                                Thread.sleep(500);
+                                mCameraHelp.changeFlash();
                             }
                         }
                     }

@@ -12,8 +12,8 @@ import android.graphics.Matrix;
 import android.graphics.SurfaceTexture;
 import android.graphics.drawable.BitmapDrawable;
 import android.media.MediaPlayer;
+import android.media.MediaRecorder;
 import android.os.Bundle;
-import android.os.Handler;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -29,7 +29,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -40,7 +39,10 @@ import com.lansosdk.videoeditor.LanSongFileUtil;
 import com.lansosdk.videoeditor.MediaInfo;
 import com.lansosdk.videoeditor.VideoEditor;
 import com.lansosdk.videoeditor.onVideoEditorProgressListener;
+import com.projectUtil.BeCutErrorVideoSpan;
+import com.projectUtil.BeCutSubtitleSpan;
 import com.projectUtil.BeCutVideoSpan;
+import com.projectUtil.ErrorVideo;
 import com.projectUtil.Project;
 import com.projectUtil.Subtitle;
 import com.projectUtil.VideoClip;
@@ -55,14 +57,13 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.TreeMap;
 
 
 /**
@@ -126,17 +127,18 @@ public class EditVideoActivity extends BaseActivity {
     //项目对象
     private Project project;
     private String auidoPath;
-    //被裁剪的对象列表
-    private Map<Long,BeCutVideoSpan> beCutVideoSpans;
-    //所有片段
-    private List<BeCutVideoSpan> allClips;
+    //被裁剪的对象列表 (key = start , value = end)
+    private Map<Long,Long> beCutVideoSpans;
+    //所有字幕片段
+    private List<BeCutSubtitleSpan> allClips;
+    //所有错误字段
+    private List<BeCutErrorVideoSpan> allErrorVideo;
 
 
 
     private SeekBar seekBar;
     private Button button_text;
-    private Button button_check;
-    private ProgressBar progressBar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -151,7 +153,9 @@ public class EditVideoActivity extends BaseActivity {
 
         project = (Project) getIntent().getSerializableExtra("project") ;
         auidoPath = project.videos.get(0).aacPath;
-
+        allClips = new ArrayList<>();
+        allErrorVideo = new ArrayList<>();
+        beCutVideoSpans = new TreeMap<>();
 
         initUI();
         initData();
@@ -236,8 +240,6 @@ public class EditVideoActivity extends BaseActivity {
         rl_back = findViewById(R.id.rl_back);
 
         button_text=findViewById(R.id.button_text);
-        button_check=findViewById(R.id.button_yuyinCheck);
-        progressBar=findViewById(R.id.progressBar);
 
         textureView.setSurfaceTextureListener(new TextureView.SurfaceTextureListener() {
             @Override
@@ -389,16 +391,6 @@ public class EditVideoActivity extends BaseActivity {
             @Override
             public void afterTextChanged(Editable s) {
                 tv_tag.setText(s.toString());
-            }
-        });
-
-        //语音检测按钮
-        button_check.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                progressBar.setVisibility(View.VISIBLE);
-                audioRecognize();
-                progressBar.setVisibility(View.GONE);
             }
         });
     }
@@ -902,40 +894,147 @@ public class EditVideoActivity extends BaseActivity {
     }
 
 
+    /**
+     * 语音识别获取字幕列表
+     * @return
+     */
     private List<Subtitle> audioRecognize(){
         return AudioToText.getSubtitles(auidoPath);
     }
 
+    /**
+     * 将字幕整合至porject对象中，语音识别按钮调用该方法
+     */
     private void combineSubtitlesToProject(){
         project.videoClips.get(0).subtitles = audioRecognize();
     }
 
-    private BeCutVideoSpan convertSubtitleTo(Subtitle subtitle){
-        BeCutVideoSpan beCutVideoSpan = new BeCutVideoSpan();
-        beCutVideoSpan.startTime = subtitle.startTime;
-        beCutVideoSpan.endTime = subtitle.endTime;
-        beCutVideoSpan.subtitle = subtitle.subtitle;
-        return beCutVideoSpan;
+    /**
+     * 字幕转为BeCutSubtitleSpan
+     * @param subtitle
+     * @return
+     */
+    private BeCutSubtitleSpan convertSubtitleTo(Subtitle subtitle){
+        BeCutSubtitleSpan beCutSubtitleSpan = new BeCutSubtitleSpan();
+        beCutSubtitleSpan.startTime = subtitle.startTime;
+        beCutSubtitleSpan.endTime = subtitle.endTime;
+        beCutSubtitleSpan.subtitle = subtitle.subtitle;
+        return beCutSubtitleSpan;
     }
 
-    private BeCutVideoSpan convertSubtitleTo(Subtitle subtitle, VideoClip videoClip){
+    /**
+     * 字幕转为BeCutSubtitleSpan
+     * @param subtitle
+     * @param videoClip
+     * @return
+     */
+    private BeCutSubtitleSpan convertSubtitleTo(Subtitle subtitle, VideoClip videoClip){
         Long startTime = videoClip.startTime;
-        BeCutVideoSpan beCutVideoSpan = new BeCutVideoSpan();
-        beCutVideoSpan.startTime = startTime+subtitle.startTime;
-        beCutVideoSpan.endTime = startTime+subtitle.endTime;
-        beCutVideoSpan.subtitle = subtitle.subtitle;
-        return beCutVideoSpan;
+        BeCutSubtitleSpan beCutSubtitleSpan = new BeCutSubtitleSpan();
+        beCutSubtitleSpan.startTime = startTime+subtitle.startTime;
+        beCutSubtitleSpan.endTime = startTime+subtitle.endTime;
+        beCutSubtitleSpan.subtitle = subtitle.subtitle;
+        return beCutSubtitleSpan;
     }
 
-    private List<BeCutVideoSpan> recognizeBeCutVideoSpan(List<Subtitle> subtitles){
-        List<BeCutVideoSpan> beCutVideoSpans = new ArrayList<>();
+    /**
+     * 语音识别获取所有字幕的BeCutSubtitleSpan
+     * @param subtitles
+     * @return
+     */
+    private List<BeCutSubtitleSpan> recognizeBeCutVideoSpan(List<Subtitle> subtitles){
+        List<BeCutSubtitleSpan> beCutSubtitleSpans = new ArrayList<>();
         for (Subtitle subtitle : subtitles){
-            beCutVideoSpans.add(convertSubtitleTo(subtitle));
+            beCutSubtitleSpans.add(convertSubtitleTo(subtitle));
         }
-        return beCutVideoSpans;
+        return beCutSubtitleSpans;
     }
 
+    /**
+     * 加载所有字幕片段
+     */
     private void refreshAllClips(){
         allClips = recognizeBeCutVideoSpan(audioRecognize());
+    }
+
+    /**
+     * 向要裁剪的列表添加字母片段
+     * @param beCutSubtitleSpan
+     */
+    private void addBeCutVideoSpan(BeCutSubtitleSpan beCutSubtitleSpan){
+        beCutVideoSpans.put(beCutSubtitleSpan.startTime, beCutSubtitleSpan.endTime);
+    }
+
+    /**
+     * 去除一个要删减的片段
+     * @param beCutSubtitleSpan
+     */
+    private void removeBeCutVideoSpan(BeCutSubtitleSpan beCutSubtitleSpan){
+        beCutVideoSpans.remove(beCutSubtitleSpan.startTime);
+    }
+    /**
+     * 向要裁剪的列表添加错误片段
+     * @param beCutErrorVideoSpan
+     */
+    private void addErrorVideo(BeCutErrorVideoSpan beCutErrorVideoSpan){
+        beCutVideoSpans.put(beCutErrorVideoSpan.startTime,beCutErrorVideoSpan.endTime);
+    }
+
+    /**
+     * 去除一个要删减的片段
+     * @param beCutErrorVideoSpan
+     */
+    private void removeErrorVideo(BeCutErrorVideoSpan beCutErrorVideoSpan){
+        beCutVideoSpans.remove(beCutErrorVideoSpan.startTime);
+    }
+
+    /**
+     * 加载所有的错误片段
+     */
+    private void refreshAllErrorVideo(){
+        List<ErrorVideo> errorVideos = project.videoClips.get(0).errorVideos;
+        Long startTime = project.videoClips.get(0).startTime;
+        List<BeCutErrorVideoSpan> beCutErrorVideoSpans = new ArrayList<>();
+        for(ErrorVideo errorVideo : errorVideos){
+            beCutErrorVideoSpans.add(new BeCutErrorVideoSpan(errorVideo.startTime+startTime,
+                                                              errorVideo.endTime+startTime,
+                                                                        errorVideo.errorType));
+        }
+        allErrorVideo = beCutErrorVideoSpans;
+    }
+
+    /**
+     * 获取剩下的视频的时间段
+     * @return
+     */
+    private List<BeCutVideoSpan> getRemainVideoSpan(){
+        Long lastEnd = 0L;
+        List<BeCutVideoSpan> beCutVideoSpan = new ArrayList<>();
+        for(Map.Entry<Long,Long> entry : beCutVideoSpans.entrySet()){
+            Long start = entry.getKey();
+            if(start > lastEnd){
+                beCutVideoSpan.add(new BeCutVideoSpan(lastEnd,start));
+                lastEnd = entry.getValue();
+            }else {
+                if(entry.getValue() > lastEnd){
+                    lastEnd = entry.getValue();
+                }
+            }
+        }
+        return beCutVideoSpan;
+    }
+
+    /**
+     * 最终合并视频
+     * @return 返回路径
+     */
+    private String processVideo(){
+        List<BeCutVideoSpan> beCutVideoSpan = getRemainVideoSpan();
+        List<String> path = new ArrayList<>();
+        VideoEditor videoEditor = new VideoEditor();
+        for (BeCutVideoSpan b : beCutVideoSpan){
+            path.add(videoEditor.executeCutVideoExact(project.videos.get(0).mp4Path, b.startTime, b.endTime-b.startTime));
+        }
+        return videoEditor.mergeVideos(path);
     }
 }
