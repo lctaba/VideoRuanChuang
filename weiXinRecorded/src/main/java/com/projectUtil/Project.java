@@ -1,5 +1,6 @@
 package com.projectUtil;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,9 +9,9 @@ import java.util.List;
  * @Date 2021/3/20 14:15
  */
 
-public class Project {
-    //项目中包含的素材名称
-    public List<String> videos;
+public class Project implements Serializable {
+    //项目中包含的素材路径
+    public List<Video> videos;
     //项目中包含的视频片段
     public List<VideoClip> videoClips;
     //项目的名称

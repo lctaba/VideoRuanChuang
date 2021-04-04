@@ -128,7 +128,7 @@ public class OpencvUnit {
     }
 
     /**
-     * 大于3是清晰图片，小于3是模糊图片
+     * 大于5是清晰图片，小于5是模糊图片
      * @param bitmap
      * @return
      */
@@ -138,7 +138,7 @@ public class OpencvUnit {
         double result = culBlurByLaplacian(bitmap);
         Log.i("TAG", "isBlurByLaplacian: "+result);
         Log.i("TAG", "isBlurByLaplacian: end");
-        if(result > 3){
+        if(result > 5){
             return false;
         }else {
             return true;

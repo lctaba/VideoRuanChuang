@@ -163,4 +163,26 @@ public class ImageHandler {
         Log.i("end"+rTime, "startOrStop: "+System.currentTimeMillis());
         return 0;
     }
+
+    /**
+     * 判断是否要开启或停止录制
+     * 由于识别精度不高，距离较远的手势难以识别到，因此考虑将图片分割识别
+     * @param imagePiece  输入图片
+     * @return 0为什么都不做，1为停止，2为重新开始录制
+     */
+    public int startOrStop(ImagePiece imagePiece) {
+        Log.i("start", "startOrStop: "+System.currentTimeMillis());
+        List<ImagePiece> pieces = new ArrayList<ImagePiece>();
+        int res = 0;
+
+        if (gestureLandmark(imagePiece.getBitmap()) == GestureType.GTYPE_FIVE) {
+            return 1;
+        }
+        if (gestureLandmark(imagePiece.getBitmap()) == GestureType.GTYPE_OK) {
+            return 2;
+        }
+
+        Log.i("end", "startOrStop: "+System.currentTimeMillis());
+        return 0;
+    }
 }

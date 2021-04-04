@@ -72,11 +72,40 @@ public class AudioToText {
         for(Object object : array){
             JSONObject jsonObject = (JSONObject) object;
             Subtitle subtitle = new Subtitle();
-            subtitle.startTime = jsonObject.getInteger("bg");
-            subtitle.endTime = jsonObject.getInteger("ed");
+            subtitle.startTime = jsonObject.getLong("bg");
+            subtitle.endTime = jsonObject.getLong("ed");
             subtitle.subtitle = jsonObject.getString("onebest");
             subtitles.add(subtitle);
         }
         return subtitles;
+    }
+
+    public static List<Subtitle> getSubtitles(String path){
+        //初始化客户端
+        LfasrClient lfasrClient = LfasrClient.getInstance(APP_ID,SECRET_KEY);
+        //上传音频文件
+        Message task = lfasrClient.upload(path);
+        String taskId = task.getData();
+        Log.i("getMessage", "taskId: "+taskId);
+
+        //查看撰写进度
+        int status = 0;
+        while (status != 9){
+            Message message = lfasrClient.getProgress(taskId);
+            JSONObject object = JSON.parseObject(message.getData());
+            status = object.getInteger("status");
+            Log.i("getMessage", "Message: "+message.getData());
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+        Message result = lfasrClient.getResult(taskId);
+        Log.i("getMessage", "result: "+result.getData());
+        JSONArray array = (JSONArray) JSON.parse(result.getData());
+        Log.i("getMessage", "result: "+array);
+        return bindMessageToProject(array);
     }
 }

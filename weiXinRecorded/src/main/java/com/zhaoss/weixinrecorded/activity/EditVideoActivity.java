@@ -33,10 +33,14 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.AI.Audio.AudioToText;
 import com.lansosdk.videoeditor.LanSongFileUtil;
 import com.lansosdk.videoeditor.MediaInfo;
 import com.lansosdk.videoeditor.VideoEditor;
 import com.lansosdk.videoeditor.onVideoEditorProgressListener;
+import com.projectUtil.Project;
+import com.projectUtil.Subtitle;
+import com.projectUtil.VideoClip;
 import com.zhaoss.weixinrecorded.R;
 import com.zhaoss.weixinrecorded.util.MyVideoEditor;
 import com.zhaoss.weixinrecorded.util.RxJavaUtil;
@@ -47,6 +51,8 @@ import com.zhaoss.weixinrecorded.view.TuyaView;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.util.List;
 
 /**
  * Created by zhaoshuang on 17/2/21.
@@ -106,6 +112,10 @@ public class EditVideoActivity extends BaseActivity {
     private int executeCount;//总编译次数
     private float executeProgress;//编译进度
     private MediaPlayer mMediaPlayer;
+    //项目对象
+    private Project project;
+    private String auidoPath;
+
 
     private SeekBar seekBar;
     @Override
@@ -119,6 +129,10 @@ public class EditVideoActivity extends BaseActivity {
         dp100 = (int) getResources().getDimension(R.dimen.dp100);
         windowWidth = Utils.getWindowWidth(mContext);
         windowHeight = Utils.getWindowHeight(mContext);
+
+        project = (Project) getIntent().getSerializableExtra("project") ;
+        auidoPath = project.videos.get(0).aacPath;
+        audioRecognize();
 
         initUI();
         initData();
@@ -814,5 +828,10 @@ public class EditVideoActivity extends BaseActivity {
         if (resultCode == RESULT_OK) {
             path = data.getStringExtra(RecordedActivity.INTENT_PATH);
         }
+    }
+
+
+    private List<Subtitle> audioRecognize(){
+        return AudioToText.getSubtitles(auidoPath);
     }
 }
