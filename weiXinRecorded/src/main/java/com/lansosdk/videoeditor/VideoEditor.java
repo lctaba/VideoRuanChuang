@@ -1013,6 +1013,34 @@ public class VideoEditor {
         }
     }
 
+    public String mergeVideos(List<String> path){
+        List<String> cmdList = new ArrayList<String>();
+        cmdList.add("-i");
+        StringBuilder stringBuilder = new StringBuilder();
+        for(String s : path){
+            File file = new File(s);
+            if(file.exists()){
+                stringBuilder.append(s);
+                stringBuilder.append("|");
+            }
+        }
+        cmdList.add(stringBuilder.toString());
+        cmdList.add("-c");
+        cmdList.add("copy");
+        String dstFile= LanSongFileUtil.createMp4FileInBox();
+        cmdList.add(dstFile);
+        String[] command = new String[cmdList.size()];
+        for (int i = 0; i < cmdList.size(); i++) {
+            command[i] = (String) cmdList.get(i);
+        }
+        int ret= executeVideoEditor(command);
+        if(ret==0){
+            return dstFile;
+        }else{
+            LanSongFileUtil.deleteFile(dstFile);
+            return null;
+        }
+    }
 
     /**
      * 精确裁剪的同时,缩放到指定位置,不同于上面的命令,这个可以设置宽度和高度. 其中宽度和高度是采用缩放来完成.
