@@ -12,6 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.projectUtil.Project;
+import com.projectUtil.ProjectUtil;
 import com.projectUtil.VideoAdapter;
 import com.zhaoss.weixinrecorded.R;
 
@@ -20,7 +21,7 @@ import java.util.List;
 
 public class SelectActivity extends AppCompatActivity {
 
-    private List<Project>projectList= new ArrayList<>();
+    private List<Project>projectList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,6 +93,6 @@ public class SelectActivity extends AppCompatActivity {
 
     //TODO:在内存中读取数据并导入
     private void initProjects(){
-
+    projectList= ProjectUtil.getProjectList(this.getExternalFilesDir(null).getPath());
     }
 }

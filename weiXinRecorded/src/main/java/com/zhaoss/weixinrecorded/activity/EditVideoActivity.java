@@ -131,9 +131,9 @@ public class EditVideoActivity extends BaseActivity {
     //被裁剪的对象列表 (key = start , value = end)
     private Map<Long,Long> beCutVideoSpans;
     //所有字幕片段
-    private List<BeCutSubtitleSpan> allClips;
+    public static List<BeCutSubtitleSpan> allClips;
     //所有错误字段
-    private List<BeCutErrorVideoSpan> allErrorVideo;
+    public static List<BeCutErrorVideoSpan> allErrorVideo;
 
 
 
@@ -983,7 +983,7 @@ public class EditVideoActivity extends BaseActivity {
     /**
      * 加载所有字幕片段
      */
-    private void refreshAllClips(){
+    public void refreshAllClips(){
         allClips = recognizeBeCutVideoSpan(audioRecognize());
     }
 
@@ -1021,7 +1021,7 @@ public class EditVideoActivity extends BaseActivity {
     /**
      * 加载所有的错误片段
      */
-    private void refreshAllErrorVideo(){
+    public void refreshAllErrorVideo(){
         List<ErrorVideo> errorVideos = project.videoClips.get(0).errorVideos;
         Long startTime = project.videoClips.get(0).startTime;
         List<BeCutErrorVideoSpan> beCutErrorVideoSpans = new ArrayList<>();

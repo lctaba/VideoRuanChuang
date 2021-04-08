@@ -19,7 +19,7 @@ import java.util.List;
 
 public class CutVideoActivity extends AppCompatActivity {
 
-    private List<BeCutErrorVideoSpan> myList= new ArrayList<>();
+    private List<BeCutErrorVideoSpan> myList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,6 +91,8 @@ public class CutVideoActivity extends AppCompatActivity {
 
     //TODO:在内存中读取数据并导入mylist
     private void initProjects(){
-
+        EditVideoActivity editVideoActivity=new EditVideoActivity();
+        editVideoActivity.refreshAllErrorVideo();
+        myList=editVideoActivity. allErrorVideo;
     }
 }

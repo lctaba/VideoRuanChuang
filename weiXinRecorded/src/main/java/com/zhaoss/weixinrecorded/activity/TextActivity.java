@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TextActivity extends AppCompatActivity {
-    private List<BeCutSubtitleSpan> mylist=new ArrayList<>();
+    private List<BeCutSubtitleSpan> mylist;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,6 +89,8 @@ public class TextActivity extends AppCompatActivity {
 
     //TODO:将内存的数据读入到mylist中
     private void initText(){
-
+    EditVideoActivity editVideoActivity=new EditVideoActivity();
+    editVideoActivity.refreshAllClips();
+    mylist=editVideoActivity.allClips;
     }
 }

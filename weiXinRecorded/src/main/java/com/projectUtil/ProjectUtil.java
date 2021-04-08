@@ -21,7 +21,9 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.prefs.NodeChangeEvent;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -222,6 +224,9 @@ public class ProjectUtil {
      */
     public static Project parse(String path, String name){
         File file = new File(path+"/"+name+"/project.xml");
+        if(!file.exists()){
+            return null;
+        }
         Project project = new Project();
 
         try {
@@ -422,5 +427,26 @@ public class ProjectUtil {
             video.aacPath = pathList.item(3).getNodeValue();
             project.videos.add(video);
         }
+    }
+
+    /**
+     * 获取项目列表
+     * path为this.getExternalFilesDir(null).getPath()
+     * @param path
+     * @return
+     */
+    public static List<Project> getProjectList(String path){
+        File file = new File(path);
+        File[] dirs = file.listFiles();
+        List<Project> projects = new ArrayList<>();
+        for(File f : Objects.requireNonNull(dirs)){
+            if(f.isDirectory()){
+                Project p = parse(path,f.getName());
+                if(p!=null){
+                    projects.add(p);
+                }
+            }
+        }
+        return projects;
     }
 }

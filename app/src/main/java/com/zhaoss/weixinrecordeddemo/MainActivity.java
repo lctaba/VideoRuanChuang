@@ -15,8 +15,14 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.AI.Audio.AudioToText;
+import com.projectUtil.Project;
+import com.projectUtil.ProjectUtil;
 import com.zhaoss.weixinrecorded.activity.RecordedActivity;
 import com.zhaoss.weixinrecorded.activity.SelectActivity;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -36,7 +42,6 @@ public class MainActivity extends AppCompatActivity {
         Button button_add = findViewById(R.id.button3);
         Button button_select = findViewById(R.id.button4);
         Button button_audioRecognition = findViewById(R.id.button5);
-
         button_add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -81,6 +86,7 @@ public class MainActivity extends AppCompatActivity {
                 AudioToText.getMessage(getExternalFilesDir(null).getPath()+"/1617115770082/21330224941215.m4a");
             }
         });
+
 
     }
 }
