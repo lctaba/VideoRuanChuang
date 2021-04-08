@@ -40,7 +40,6 @@ import com.zhaoss.weixinrecorded.util.Utils;
 import com.zhaoss.weixinrecorded.view.LineProgressView;
 import com.zhaoss.weixinrecorded.view.RecordView;
 
-import org.opencv.core.Core;
 
 import java.io.File;
 import java.io.FileInputStream;

@@ -9,9 +9,17 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.projectUtil.BeCutErrorVideoSpan;
+import com.projectUtil.BeCutSubtitleSpan;
+import com.projectUtil.TextAdapter;
+import com.projectUtil.VideoAdapter;
 import com.zhaoss.weixinrecorded.R;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class TextActivity extends AppCompatActivity {
+    private List<BeCutSubtitleSpan> mylist;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,13 +27,10 @@ public class TextActivity extends AppCompatActivity {
         setContentView(R.layout.activity_text);
         ListView listView=(ListView) findViewById(R.id.list_Main);
 
-        //在String 资源文件中操作data数组
-        String[] data = getResources().getStringArray(R.array.arr);
+        initText();//初始化字幕数据,需要到内存中去寻找
+        TextAdapter Myadapter=new TextAdapter(TextActivity.this,R.layout.video_item,mylist);
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_list_item_1, data);
-
-        listView.setAdapter(adapter);
+        listView.setAdapter(Myadapter);
         // 设置ListView的单击事件
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
@@ -52,7 +57,7 @@ public class TextActivity extends AppCompatActivity {
             }
         });
 
-        // 设置ListView的长按事件
+        // 设置ListView的长按事件，后期可以做成单击跳转，长按修改文本内容这样的
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
 
             /**
@@ -80,5 +85,12 @@ public class TextActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    //TODO:将内存的数据读入到mylist中
+    private void initText(){
+    EditVideoActivity editVideoActivity=new EditVideoActivity();
+    editVideoActivity.refreshAllClips();
+    mylist=editVideoActivity.allClips;
     }
 }
