@@ -157,8 +157,8 @@ public class EditVideoActivity extends BaseActivity {
 
         project = new Project((Project) getIntent().getSerializableExtra("project"));
         audioPath = project.videos.get(0).aacPath;
+        refreshAllErrorVideo();
         allClips = new ArrayList<>();
-        allErrorVideo = new ArrayList<>();
         beCutVideoSpans = new TreeMap<>();
 
         initUI();
