@@ -160,7 +160,6 @@ public class EditVideoActivity extends BaseActivity {
         allClips = new ArrayList<>();
         allErrorVideo = new ArrayList<>();
         beCutVideoSpans = new TreeMap<>();
-
         initUI();
         initData();
         initVideoSize();
@@ -246,6 +245,7 @@ public class EditVideoActivity extends BaseActivity {
 
         button_text=findViewById(R.id.button_text);
         button_check=findViewById(R.id.button_yuyinCheck);
+
         progressBar=findViewById(R.id.progressBar);
         button_video_list=findViewById(R.id.button_video_list);
 
