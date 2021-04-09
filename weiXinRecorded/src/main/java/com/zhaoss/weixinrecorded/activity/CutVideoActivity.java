@@ -46,8 +46,8 @@ public class CutVideoActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
-                if (view instanceof TextView) {
-                    TextView textView = (TextView) view;
+                if (view instanceof View) {
+                    TextView textView=view.findViewById(R.id.video_name);
                     String content = textView.getText().toString();
 
                     Toast.makeText(CutVideoActivity.this, "点击了 " + content,
@@ -73,8 +73,8 @@ public class CutVideoActivity extends AppCompatActivity {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view,
                                            int position, long id) {
-                if (view instanceof TextView) {
-                    TextView textView = (TextView) view;
+                if (view instanceof View) {
+                    TextView textView=view.findViewById(R.id.video_name);
                     String content = textView.getText().toString();
 
                     Toast.makeText(CutVideoActivity.this, "长按了 " + content,

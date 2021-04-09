@@ -25,6 +25,6 @@ public class TextAdapter extends ArrayAdapter<BeCutSubtitleSpan> {
         View view = LayoutInflater.from(getContext()).inflate(resourceId, parent, false);
         TextView textView=view.findViewById(R.id.video_name);
         textView.setText(beCutSubtitleSpan.toString());
-        return textView;
+        return view;
     }
 }

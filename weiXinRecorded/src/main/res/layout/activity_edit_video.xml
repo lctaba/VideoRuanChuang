@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#000">
+    android:background="@drawable/ic_baseline_not_started_24"
+    android:orientation="vertical">
 
     <RelativeLayout
         android:id="@+id/rl_tuya"
@@ -40,7 +40,7 @@
                 android:layout_height="match_parent"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentBottom="true"
-                android:layout_marginEnd="2dp"
+                android:layout_marginEnd="0dp"
                 android:layout_marginBottom="0dp">
 
                 <LinearLayout
@@ -224,26 +224,26 @@
                         android:maxHeight="50dp" />
                 </LinearLayout>
 
+                <ImageButton
+                    android:id="@+id/imageButtonStop"
+                    android:layout_width="37dp"
+                    android:layout_height="34dp"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginTop="553dp"
+                    android:background="@drawable/ic_baseline_stop_circle_24"
+                    android:visibility="visible"
+                    app:srcCompat="@android:drawable/ic_media_pause" />
+
                 <SeekBar
                     android:id="@+id/seekBar"
-                    android:layout_width="414dp"
-                    android:layout_height="50dp"
+                    android:layout_width="307dp"
+                    android:layout_height="40dp"
+                    android:layout_alignParentEnd="true"
                     android:layout_marginStart="0dp"
                     android:layout_marginTop="550dp"
-                    android:layout_marginEnd="1dp"
-                   />
-
-                <TextView
-                    android:id="@+id/textView2"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentTop="true"
-                    android:layout_alignParentEnd="true"
-                    android:layout_marginTop="550dp"
-                    android:layout_marginEnd="0dp"
-                    android:text="这是一行字幕"
-                    android:textAlignment="center"
-                    android:textColor="@color/color1" />
+                    android:layout_marginEnd="8dp" />
 
                 <ProgressBar
                     android:id="@+id/progressBar"
@@ -254,8 +254,7 @@
                     android:layout_marginTop="64dp"
                     android:layout_marginEnd="32dp"
                     android:layout_marginBottom="64dp"
-                    android:visibility="gone"
-                     />
+                    android:visibility="gone" />
 
             </RelativeLayout>
 
@@ -268,51 +267,53 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:background="#dd2B2B2B">
+
         <RelativeLayout
             android:id="@+id/rl_close"
             android:layout_width="50dp"
             android:layout_height="50dp">
+
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:src="@mipmap/back"/>
+                android:src="@mipmap/back" />
 
         </RelativeLayout>
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="#fff"
-            android:textSize="18sp"
             android:layout_centerInParent="true"
-            android:text="编辑视频"/>
+            android:text="编辑视频"
+            android:textColor="#fff"
+            android:textSize="18sp" />
 
         <Button
             android:id="@+id/button_video_list"
             android:layout_width="wrap_content"
             android:layout_height="29dp"
-            android:background="@drawable/yuanjiao"
-            android:text="视频列表"
             android:layout_centerInParent="true"
-            android:textColor="#fff"
-           />
+            android:background="@drawable/yuanjiao"
+            android:text="模糊视频"
+            android:textColor="#fff" />
 
         <TextView
             android:id="@+id/tv_finish_video"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:paddingLeft="13dp"
-            android:paddingRight="13dp"
-            android:paddingTop="5dp"
-            android:paddingBottom="5dp"
-            android:textSize="14sp"
-            android:textColor="#fff"
-            android:background="@drawable/yuanjiao"
             android:layout_alignParentRight="true"
+            android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="10dp"
-            android:text="完成"/>
+            android:background="@drawable/yuanjiao"
+            android:paddingLeft="13dp"
+            android:paddingTop="5dp"
+            android:paddingRight="13dp"
+            android:paddingBottom="5dp"
+            android:text="完成"
+            android:textColor="#fff"
+            android:textSize="14sp" />
 
         <Button
             android:id="@+id/button_text"
@@ -334,14 +335,14 @@
             android:layout_width="wrap_content"
             android:layout_height="29dp"
             android:layout_centerVertical="true"
-            android:background="@drawable/yuanjiao"
             android:layout_marginStart="40dp"
+            android:background="@drawable/yuanjiao"
             android:paddingLeft="13dp"
             android:paddingTop="5dp"
             android:paddingRight="13dp"
             android:paddingBottom="5dp"
-            android:textColor="#fff"
-            android:text="语音检测" />
+            android:text="语音检测"
+            android:textColor="#fff" />
 
     </RelativeLayout>
 
@@ -353,41 +354,45 @@
         android:paddingLeft="15dp"
         android:paddingRight="15dp"
         android:visibility="gone">
+
         <TextView
             android:id="@+id/tv_close"
             android:layout_width="50dp"
             android:layout_height="50dp"
+            android:gravity="center"
             android:text="取消"
-            android:textSize="18sp"
             android:textColor="#fff"
-            android:gravity="center"/>
+            android:textSize="18sp" />
+
         <TextView
             android:id="@+id/tv_finish"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:gravity="center"
-            android:textSize="18sp"
-            android:textColor="#3CAC57"
             android:layout_alignParentRight="true"
-            android:text="完成"/>
+            android:gravity="center"
+            android:text="完成"
+            android:textColor="#3CAC57"
+            android:textSize="18sp" />
+
         <EditText
             android:id="@+id/et_tag"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_margin="5dp"
-            android:textSize="24sp"
             android:layout_below="@id/tv_finish"
-            android:textColor="#fff"
+            android:layout_margin="5dp"
+            android:background="@null"
             android:gravity="top"
-            android:background="@null"/>
+            android:textColor="#fff"
+            android:textSize="24sp" />
+
         <TextView
             android:id="@+id/tv_tag"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="5dp"
             android:layout_centerInParent="true"
-            android:textSize="24sp"
+            android:layout_margin="5dp"
             android:textColor="#fff"
+            android:textSize="24sp"
             android:visibility="invisible" />
     </RelativeLayout>
 
@@ -395,12 +400,12 @@
         android:id="@+id/tv_hint_delete"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:gravity="center"
-        android:textSize="16sp"
-        android:textColor="#fff"
-        android:text="双指可缩放旋转, 拖到此处可删除表情"
+        android:layout_alignParentBottom="true"
         android:background="#dd2B2B2B"
-        android:visibility="gone"
-        android:layout_alignParentBottom="true"/>
+        android:gravity="center"
+        android:text="双指可缩放旋转, 拖到此处可删除表情"
+        android:textColor="#fff"
+        android:textSize="16sp"
+        android:visibility="gone" />
 
 </RelativeLayout>

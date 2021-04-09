@@ -1,6 +1,9 @@
 package com.zhaoss.weixinrecorded.activity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -13,21 +16,46 @@ import com.projectUtil.BeCutSubtitleSpan;
 import com.zhaoss.weixinrecorded.adpter.TextAdapter;
 import com.zhaoss.weixinrecorded.R;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class TextActivity extends AppCompatActivity {
     private List<BeCutSubtitleSpan> mylist;
+    private ListView listView;
+    //public static Boolean[] isDelete;
+    //public static Boolean isInit = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_text);
-        ListView listView=(ListView) findViewById(R.id.list_Main);
+        listView=(ListView) findViewById(R.id.list_Main);
 
         initText();//初始化字幕数据,需要到内存中去寻找
-        TextAdapter Myadapter=new TextAdapter(TextActivity.this,R.layout.video_item,mylist);
+        listView.setAdapter(new TextAdapter(TextActivity.this,R.layout.video_item,mylist));
 
-        listView.setAdapter(Myadapter);
+//        if(!isInit){
+//            isDelete = new Boolean[mylist.size()];
+//            for(int i=0; i<isDelete.length; i++){
+//                isDelete[i] = false;
+//            }
+//            isInit = true;
+//        }else {
+//            while (listView.getChildCount()==0 && mylist.size()!=0) {
+//                try {
+//                    Thread.sleep(50);
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//            for(int i=0; i<isDelete.length; i++){
+//                if(isDelete[i]){
+//                    TextView textView = (TextView) listView.getChildAt(i);
+//                    textView.setTextColor(Color.rgb(255, 0, 0));
+//                }
+//            }
+//        }
+
         // 设置ListView的单击事件
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
@@ -45,7 +73,7 @@ public class TextActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
                 if (view instanceof TextView) {
-                    TextView textView = (TextView) view;
+                    TextView textView=view.findViewById(R.id.video_name);
                     String content = textView.getText().toString();
 
                     Toast.makeText(TextActivity.this, "点击了 " + content,
@@ -72,15 +100,25 @@ public class TextActivity extends AppCompatActivity {
              * @param id
              *            所点击item的id
              */
+            @SuppressLint("ResourceAsColor")
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view,
                                            int position, long id) {
-                if (view instanceof TextView) {
-                    TextView textView = (TextView) view;
+                if (view instanceof View) {
+                    TextView textView=view.findViewById(R.id.video_name);
                     String content = textView.getText().toString();
-
                     Toast.makeText(TextActivity.this, "长按了 " + content,
                             Toast.LENGTH_SHORT).show();
+                    BeCutSubtitleSpan myBeSubtitleSpan=mylist.get(position);
+                    if( textView.getCurrentTextColor() != Color.rgb(255, 0, 0)){
+                        EditVideoActivity.addBeCutVideoSpan(myBeSubtitleSpan);
+                        textView.setTextColor(Color.rgb(255, 0, 0));
+                        //isDelete[position] = true;
+                    }else {
+                        EditVideoActivity.removeBeCutVideoSpan(myBeSubtitleSpan);
+                        textView.setTextColor(Color.rgb(0, 0, 0));
+                        //isDelete[position] = false;
+                    }
                 }
                 // 返回true，表示将单击事件进行拦截
                 return true;

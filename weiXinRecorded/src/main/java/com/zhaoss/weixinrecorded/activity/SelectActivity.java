@@ -1,5 +1,6 @@
 package com.zhaoss.weixinrecorded.activity;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -47,12 +48,17 @@ public class SelectActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
-                if (view instanceof TextView) {
-                    TextView textView = (TextView) view;
+                if (view instanceof View) {
+                    TextView textView=view.findViewById(R.id.video_name);
                     String content = textView.getText().toString();
 
                     Toast.makeText(SelectActivity.this, "点击了 " + content,
                             Toast.LENGTH_SHORT).show();
+                    Project myProject=projectList.get(position);
+                    Intent intent =new Intent(SelectActivity.this,EditVideoActivity.class);
+                    intent.putExtra("project",myProject);
+                    startActivity(intent);
+
                 }
             }
         });
@@ -74,8 +80,8 @@ public class SelectActivity extends AppCompatActivity {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view,
                                            int position, long id) {
-                if (view instanceof TextView) {
-                    TextView textView = (TextView) view;
+                if (view instanceof View) {
+                    TextView textView=view.findViewById(R.id.video_name);
                     String content = textView.getText().toString();
 
                     Toast.makeText(SelectActivity.this, "长按了 " + content,
