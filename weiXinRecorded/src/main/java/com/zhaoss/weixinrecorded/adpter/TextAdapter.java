@@ -1,4 +1,4 @@
-package com.projectUtil;
+package com.zhaoss.weixinrecorded.adpter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import com.projectUtil.BeCutSubtitleSpan;
 import com.zhaoss.weixinrecorded.R;
 
 import java.util.List;

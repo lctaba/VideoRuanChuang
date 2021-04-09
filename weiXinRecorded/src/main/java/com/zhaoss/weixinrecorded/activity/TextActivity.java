@@ -5,18 +5,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.projectUtil.BeCutErrorVideoSpan;
 import com.projectUtil.BeCutSubtitleSpan;
-import com.projectUtil.TextAdapter;
-import com.projectUtil.VideoAdapter;
+import com.zhaoss.weixinrecorded.adpter.TextAdapter;
 import com.zhaoss.weixinrecorded.R;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class TextActivity extends AppCompatActivity {

@@ -9,12 +9,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.projectUtil.BeCutErrorVideoSpan;
-import com.projectUtil.CutVideoAdapter;
-import com.projectUtil.Project;
-import com.projectUtil.VideoAdapter;
+import com.zhaoss.weixinrecorded.adpter.CutVideoAdapter;
 import com.zhaoss.weixinrecorded.R;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class CutVideoActivity extends AppCompatActivity {
@@ -91,8 +88,6 @@ public class CutVideoActivity extends AppCompatActivity {
 
     //TODO:在内存中读取数据并导入mylist
     private void initProjects(){
-        EditVideoActivity editVideoActivity=new EditVideoActivity();
-        editVideoActivity.refreshAllErrorVideo();
-        myList=editVideoActivity. allErrorVideo;
+        myList=EditVideoActivity.allErrorVideo;
     }
 }
