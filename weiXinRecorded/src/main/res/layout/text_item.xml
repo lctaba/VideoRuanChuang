@@ -8,6 +8,6 @@
         android:layout_height="wrap_content"
         android:id="@+id/video_name"
         android:layout_gravity="center"
-        android:layout_marginLeft="10dp"/>
+        android:gravity="left"/>
 
 </LinearLayout>

@@ -52,7 +52,7 @@ public class SelectActivity extends AppCompatActivity {
                     TextView textView=view.findViewById(R.id.video_name);
                     String content = textView.getText().toString();
 
-                    Toast.makeText(SelectActivity.this, "点击了 " + content,
+                    Toast.makeText(SelectActivity.this, "选择了项目： " + content,
                             Toast.LENGTH_SHORT).show();
                     Project myProject=projectList.get(position);
                     Intent intent =new Intent(SelectActivity.this,EditVideoActivity.class);

@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/black"
     android:orientation="vertical">
 
     <RelativeLayout
@@ -32,6 +33,14 @@
                 android:layout_alignParentTop="true"
                 android:layout_marginStart="0dp"
                 android:layout_marginTop="0dp" />
+
+            <ProgressBar
+                android:id="@+id/progressBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_gravity="center"
+                android:visibility="invisible" />
 
             <RelativeLayout
                 android:id="@+id/rl_bottom"
@@ -243,17 +252,6 @@
                     android:layout_marginStart="0dp"
                     android:layout_marginTop="550dp"
                     android:layout_marginEnd="10dp" />
-
-                <ProgressBar
-                    android:id="@+id/progressBar"
-                    android:layout_width="0dp"
-                    android:layout_height="2dp"
-                    android:layout_gravity="center"
-                    android:layout_marginStart="32dp"
-                    android:layout_marginTop="64dp"
-                    android:layout_marginEnd="32dp"
-                    android:layout_marginBottom="64dp"
-                    android:visibility="gone" />
 
             </RelativeLayout>
 
