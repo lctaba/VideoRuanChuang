@@ -93,6 +93,6 @@ public class SelectActivity extends AppCompatActivity {
 
     //TODO:在内存中读取数据并导入
     private void initProjects(){
-    projectList= ProjectUtil.getProjectList(this.getExternalFilesDir(null).getPath());
+        projectList= ProjectUtil.getProjectList(this.getExternalFilesDir(null).getPath());
     }
 }

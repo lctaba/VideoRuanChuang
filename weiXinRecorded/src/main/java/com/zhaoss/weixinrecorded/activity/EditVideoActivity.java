@@ -127,7 +127,7 @@ public class EditVideoActivity extends BaseActivity {
     private MediaPlayer mMediaPlayer;
     //项目对象
     private Project project;
-    private String auidoPath;
+    private String audioPath;
     //被裁剪的对象列表 (key = start , value = end)
     private Map<Long,Long> beCutVideoSpans;
     //所有字幕片段
@@ -155,8 +155,8 @@ public class EditVideoActivity extends BaseActivity {
         windowWidth = Utils.getWindowWidth(mContext);
         windowHeight = Utils.getWindowHeight(mContext);
 
-        project = (Project) getIntent().getSerializableExtra("project") ;
-        auidoPath = project.videos.get(0).aacPath;
+        project = new Project((Project) getIntent().getSerializableExtra("project"));
+        audioPath = project.videos.get(0).aacPath;
         allClips = new ArrayList<>();
         allErrorVideo = new ArrayList<>();
         beCutVideoSpans = new TreeMap<>();
@@ -174,6 +174,8 @@ public class EditVideoActivity extends BaseActivity {
 
 
     }
+
+
 
     private TimerTask timenrtask=new TimerTask() {
         @Override
@@ -390,7 +392,8 @@ public class EditVideoActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 progressBar.setVisibility(View.VISIBLE);
-                audioRecognize();
+                refreshAllClips();
+                refreshAllErrorVideo();
                 progressBar.setVisibility(View.GONE);
             }
         });
@@ -929,14 +932,14 @@ public class EditVideoActivity extends BaseActivity {
      * @return
      */
     private List<Subtitle> audioRecognize(){
-        return AudioToText.getSubtitles(auidoPath);
+        return AudioToText.getSubtitles(audioPath);
     }
 
     /**
      * 将字幕整合至porject对象中，语音识别按钮调用该方法
      */
-    private void combineSubtitlesToProject(){
-        project.videoClips.get(0).subtitles = audioRecognize();
+    private void combineSubtitlesToProject(List<Subtitle> subtitles){
+        project.videoClips.get(0).subtitles = subtitles;
     }
 
     /**
@@ -984,7 +987,9 @@ public class EditVideoActivity extends BaseActivity {
      * 加载所有字幕片段
      */
     public void refreshAllClips(){
-        allClips = recognizeBeCutVideoSpan(audioRecognize());
+        List<Subtitle> subtitles = audioRecognize();
+        allClips = recognizeBeCutVideoSpan(subtitles);
+        combineSubtitlesToProject(subtitles);
     }
 
     /**
