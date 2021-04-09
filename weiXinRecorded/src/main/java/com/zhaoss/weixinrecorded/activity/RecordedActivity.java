@@ -557,14 +557,14 @@ public class RecordedActivity extends BaseActivity {
                 String h264Path = storeH264Path;
                 Utils.mergeFile(segmentList.toArray(new String[]{}), h264Path);
                 //h264转mp4
-                storeMp4Path = LanSongFileUtil.DEFAULT_DIR+System.currentTimeMillis()+".mp4";
-                String mp4Path = storeMp4Path;
+                String mp4Path = LanSongFileUtil.DEFAULT_DIR+System.currentTimeMillis()+".mp4";
                 mVideoEditor.h264ToMp4(h264Path, mp4Path);
                 //合成音频
                 storeAacPath = mVideoEditor.executePcmEncodeAac(syntPcm(), RecordUtil.sampleRateInHz, RecordUtil.channelCount);
                 String aacPath = storeAacPath;
                 //音视频混合
                 mp4Path = mVideoEditor.executeVideoMergeAudio(mp4Path, aacPath);
+                storeMp4Path = mp4Path;
                 //裁剪只剩0-5秒
                 //mp4Path = mVideoEditor.executeCutVideoExact(mp4Path, 0, 5);
                 return mp4Path;
@@ -741,9 +741,9 @@ public class RecordedActivity extends BaseActivity {
     private void initRecorderState(){
 
         if(segmentList.size() > 0){
-            tv_hint.setText("长按录像");
+            tv_hint.setText("点击录像");
         }else{
-            tv_hint.setText("长按录像 点击拍照");
+            tv_hint.setText("点击录像");
         }
         tv_hint.setVisibility(View.VISIBLE);
 

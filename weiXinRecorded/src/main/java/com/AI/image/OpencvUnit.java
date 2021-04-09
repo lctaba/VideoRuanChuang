@@ -138,7 +138,7 @@ public class OpencvUnit {
         double result = culBlurByLaplacian(bitmap);
         Log.i("TAG", "isBlurByLaplacian: "+result);
         Log.i("TAG", "isBlurByLaplacian: end");
-        if(result > 5){
+        if(result > 10){
             return false;
         }else {
             return true;

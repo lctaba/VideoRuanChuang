@@ -3,6 +3,8 @@ package com.zhaoss.weixinrecorded.activity;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -12,8 +14,11 @@ import android.graphics.Matrix;
 import android.graphics.SurfaceTexture;
 import android.graphics.drawable.BitmapDrawable;
 import android.media.MediaPlayer;
-import android.media.MediaRecorder;
+import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
+import android.support.v4.widget.CircularProgressDrawable;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -27,6 +32,7 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -36,18 +42,22 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.AI.Audio.AudioToText;
+import com.lansosdk.videoeditor.LanSoEditor;
 import com.lansosdk.videoeditor.LanSongFileUtil;
 import com.lansosdk.videoeditor.MediaInfo;
 import com.lansosdk.videoeditor.VideoEditor;
 import com.lansosdk.videoeditor.onVideoEditorProgressListener;
+import com.libyuv.LibyuvUtil;
 import com.projectUtil.BeCutErrorVideoSpan;
 import com.projectUtil.BeCutSubtitleSpan;
 import com.projectUtil.BeCutVideoSpan;
 import com.projectUtil.ErrorVideo;
 import com.projectUtil.Project;
 import com.projectUtil.Subtitle;
+import com.projectUtil.Video;
 import com.projectUtil.VideoClip;
 import com.zhaoss.weixinrecorded.R;
+import com.zhaoss.weixinrecorded.util.MP4Merger;
 import com.zhaoss.weixinrecorded.util.MyVideoEditor;
 import com.zhaoss.weixinrecorded.util.RxJavaUtil;
 import com.zhaoss.weixinrecorded.util.Utils;
@@ -65,6 +75,8 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.TreeMap;
+
+import static android.media.MediaPlayer.SEEK_CLOSEST;
 
 
 /**
@@ -126,10 +138,10 @@ public class EditVideoActivity extends BaseActivity {
     private float executeProgress;//编译进度
     private MediaPlayer mMediaPlayer;
     //项目对象
-    private Project project;
-    private String audioPath;
+    public static Project project;
+    public static String audioPath;
     //被裁剪的对象列表 (key = start , value = end)
-    private Map<Long,Long> beCutVideoSpans;
+    public static Map<Long,Long> beCutVideoSpans;
     //所有字幕片段
     public static List<BeCutSubtitleSpan> allClips;
     //所有错误字段
@@ -142,6 +154,7 @@ public class EditVideoActivity extends BaseActivity {
     private Button button_check;
     private ProgressBar progressBar;
     private Button button_video_list;
+    private ImageButton imageButtonStop;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -155,12 +168,17 @@ public class EditVideoActivity extends BaseActivity {
         windowWidth = Utils.getWindowWidth(mContext);
         windowHeight = Utils.getWindowHeight(mContext);
 
-        project = new Project((Project) getIntent().getSerializableExtra("project"));
-        audioPath = project.videos.get(0).aacPath;
-        refreshAllErrorVideo();
-        allClips = new ArrayList<>();
-        beCutVideoSpans = new TreeMap<>();
-
+        Project tempProject = (Project) getIntent().getSerializableExtra("project");
+        if(tempProject != null){
+            project = tempProject;
+            audioPath = project.videos.get(0).aacPath;
+            allClips = new ArrayList<>();
+            refreshAllErrorVideo();
+            beCutVideoSpans = new TreeMap<>();
+        }
+        LanSoEditor.initSDK(this, null);
+        LanSongFileUtil.setFileDir(this.getExternalFilesDir(null).getPath()+"/"+ project.name +"/");
+        LibyuvUtil.loadLibrary();
         initUI();
         initData();
         initVideoSize();
@@ -214,6 +232,46 @@ public class EditVideoActivity extends BaseActivity {
         }
     };
 
+    private class AudioRecognizeTask extends AsyncTask<Integer,Integer,Integer>{
+
+        @Override
+        protected void onPreExecute() {
+            TurnProgressbar();
+            mMediaPlayer.pause();
+            button_check.setEnabled(false);
+            button_text.setEnabled(false);
+            button_video_list.setEnabled(false);
+            imageButtonStop.setEnabled(false);
+        }
+
+        @Override
+        protected Integer doInBackground(Integer... integers) {
+            beCutVideoSpans = new TreeMap<>();
+            refreshAllClips();
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Integer integer) {
+            mMediaPlayer.start();
+            TurnProgressbar();
+            button_check.setEnabled(true);
+            button_text.setEnabled(true);
+            button_video_list.setEnabled(true);
+            imageButtonStop.setEnabled(true);
+        }
+    }
+
+    public void TurnProgressbar(){
+        if (progressBar.getVisibility()==View.VISIBLE){
+            progressBar.setVisibility(View.INVISIBLE);
+        }
+        else {
+            progressBar.setVisibility(View.VISIBLE);
+        }
+
+    }
+
     private void initUI() {
 
         textureView = findViewById(R.id.textureView);
@@ -248,10 +306,11 @@ public class EditVideoActivity extends BaseActivity {
 
         button_text=findViewById(R.id.button_text);
         button_check=findViewById(R.id.button_yuyinCheck);
+
         progressBar=findViewById(R.id.progressBar);
         button_video_list=findViewById(R.id.button_video_list);
 
-
+        imageButtonStop=findViewById(R.id.imageButtonStop);
 
         textureView.setSurfaceTextureListener(new TextureView.SurfaceTextureListener() {
             @Override
@@ -378,6 +437,20 @@ public class EditVideoActivity extends BaseActivity {
             }
         });
 
+        imageButtonStop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mMediaPlayer.isPlaying()){
+                    imageButtonStop.setBackgroundResource(R.drawable.ic_baseline_not_started_24);
+                    mMediaPlayer.pause();
+                }
+                else{
+                    imageButtonStop.setBackgroundResource(R.drawable.ic_baseline_stop_circle_24);
+                    mMediaPlayer.start();
+                }
+            }
+        });
+
         //点击字幕按钮之后跳转到字幕的界面
         button_text.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -391,12 +464,21 @@ public class EditVideoActivity extends BaseActivity {
         button_check.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                progressBar.setVisibility(View.VISIBLE);
-                refreshAllClips();
-                refreshAllErrorVideo();
-                progressBar.setVisibility(View.GONE);
+                AudioRecognizeTask task = new AudioRecognizeTask();
+                task.execute();
+                //TurnProgressbar();
+                //new Thread(new ProgressThread()).start();
+         /*       TextView editTextView=showProgressDialog();*/
+
+
+               /* progressBar.clearAnimation();
+                progressBar.setVisibility(View.INVISIBLE);*/
+             /*   closeProgressDialog();*/
+                //Progressbar();
+                //new Thread(new ProgressThread()).start();
             }
         });
+
 
         //点击之后跳转到视频列表界面
         //TODO:应该还需要获取当前的视频，然后用intent传过去
@@ -429,9 +511,10 @@ public class EditVideoActivity extends BaseActivity {
     }
 
     private void initData() {
-
+        /*
         Intent intent = getIntent();
-        path = intent.getStringExtra(RecordedActivity.INTENT_PATH);
+        path = intent.getStringExtra(RecordedActivity.INTENT_PATH);*/
+        path = project.videos.get(0).mp4Path;
 
         //当进行涂鸦操作时, 隐藏标题栏和底部工具栏
         tv_video.setOnTouchListener(new TuyaView.OnTouchListener() {
@@ -461,22 +544,34 @@ public class EditVideoActivity extends BaseActivity {
     }
 
     private void initMediaPlay(SurfaceTexture surface){
+
+
         try {
             mMediaPlayer = new MediaPlayer();
             mMediaPlayer.setDataSource(path);
 
-
             mMediaPlayer.setSurface(new Surface(surface));
             mMediaPlayer.setLooping(true);
+
             mMediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                @RequiresApi(api = Build.VERSION_CODES.O)
                 @Override
                 public void onPrepared(MediaPlayer mp) {
                     mMediaPlayer.start();
+                    if(getIntent().getLongExtra("startTime",-1) != -1){
+                        Long startTime=getIntent().getLongExtra("startTime",-1);
+
+                        mMediaPlayer.seekTo(startTime, SEEK_CLOSEST );
+                        seekBar.setProgress(mMediaPlayer.getCurrentPosition());
+                        mMediaPlayer.pause();
+                        imageButtonStop.setBackgroundResource(R.drawable.ic_baseline_not_started_24);
+                        imageButtonStop.setVisibility(View.VISIBLE);
+
+                    }
+
                 }
             });
             mMediaPlayer.prepareAsync();
-
-
 
         }catch (Exception e){
             e.printStackTrace();
@@ -527,28 +622,32 @@ public class EditVideoActivity extends BaseActivity {
 
     private void finishVideo() {
 
-        final boolean isPen = tv_video.getPathSum() != 0;
-        final boolean isImage = rl_touch_view.getChildCount() != 0;
-        final boolean isSpeed = videoSpeed != 1;
-
-        if(isPen || isImage){
-            executeCount++;
-        }
-        if(isSpeed){
-            executeCount++;
-        }
-
+//        final boolean isPen = tv_video.getPathSum() != 0;
+//        final boolean isImage = rl_touch_view.getChildCount() != 0;
+//        final boolean isSpeed = videoSpeed != 1;
+//
+//        if(isPen || isImage){
+//            executeCount++;
+//        }
+//        if(isSpeed){
+//            executeCount++;
+//        }
+        final boolean isCut = beCutVideoSpans.size()!=0;
         mMediaPlayer.stop();
         editorTextView = showProgressDialog();
         RxJavaUtil.run(new RxJavaUtil.OnRxAndroidListener<String>() {
             @Override
             public String doInBackground() throws Throwable {
                 String videoPath = path;
-                if(isPen || isImage){
-                    videoPath = mergeImage(path);
-                }
-                if (isSpeed) {
-                    videoPath = myVideoEditor.executeAdjustVideoSpeed2(path, videoSpeed);
+//                if(isPen || isImage){
+//                    videoPath = mergeImage(path);
+//                }
+//                if (isSpeed) {
+//                    videoPath = processVideo();
+//                            //myVideoEditor.executeAdjustVideoSpeed2(path, videoSpeed);
+//                }
+                if(isCut){
+                    videoPath = processVideo();
                 }
                 return videoPath;
             }
@@ -559,7 +658,12 @@ public class EditVideoActivity extends BaseActivity {
                     Intent intent = new Intent();
                     intent.putExtra(RecordedActivity.INTENT_PATH, result);
                     setResult(RESULT_OK, intent);
-                    finish();
+                    //finish();
+                    if(mMediaPlayer != null){
+                        mMediaPlayer.release();
+                    }
+                    initMediaPlay(surfaceTexture);
+                    initVideoSize();
                 } else {
                     Toast.makeText(getApplicationContext(), "视频编辑失败", Toast.LENGTH_SHORT).show();
                 }
@@ -996,7 +1100,7 @@ public class EditVideoActivity extends BaseActivity {
      * 向要裁剪的列表添加字母片段
      * @param beCutSubtitleSpan
      */
-    private void addBeCutVideoSpan(BeCutSubtitleSpan beCutSubtitleSpan){
+    public static void addBeCutVideoSpan(BeCutSubtitleSpan beCutSubtitleSpan){
         beCutVideoSpans.put(beCutSubtitleSpan.startTime, beCutSubtitleSpan.endTime);
     }
 
@@ -1004,14 +1108,14 @@ public class EditVideoActivity extends BaseActivity {
      * 去除一个要删减的片段
      * @param beCutSubtitleSpan
      */
-    private void removeBeCutVideoSpan(BeCutSubtitleSpan beCutSubtitleSpan){
+    public static void removeBeCutVideoSpan(BeCutSubtitleSpan beCutSubtitleSpan){
         beCutVideoSpans.remove(beCutSubtitleSpan.startTime);
     }
     /**
      * 向要裁剪的列表添加错误片段
      * @param beCutErrorVideoSpan
      */
-    private void addErrorVideo(BeCutErrorVideoSpan beCutErrorVideoSpan){
+    public static void addErrorVideo(BeCutErrorVideoSpan beCutErrorVideoSpan){
         beCutVideoSpans.put(beCutErrorVideoSpan.startTime,beCutErrorVideoSpan.endTime);
     }
 
@@ -1019,7 +1123,7 @@ public class EditVideoActivity extends BaseActivity {
      * 去除一个要删减的片段
      * @param beCutErrorVideoSpan
      */
-    private void removeErrorVideo(BeCutErrorVideoSpan beCutErrorVideoSpan){
+    public static void removeErrorVideo(BeCutErrorVideoSpan beCutErrorVideoSpan){
         beCutVideoSpans.remove(beCutErrorVideoSpan.startTime);
     }
 
@@ -1056,6 +1160,9 @@ public class EditVideoActivity extends BaseActivity {
                 }
             }
         }
+        Long maxVideoTime = project.videoClips.get(0).endTime;
+        if(lastEnd<maxVideoTime);
+        beCutVideoSpan.add(new BeCutVideoSpan(lastEnd,maxVideoTime));
         return beCutVideoSpan;
     }
 
@@ -1068,8 +1175,24 @@ public class EditVideoActivity extends BaseActivity {
         List<String> path = new ArrayList<>();
         VideoEditor videoEditor = new VideoEditor();
         for (BeCutVideoSpan b : beCutVideoSpan){
-            path.add(videoEditor.executeCutVideoExact(project.videos.get(0).mp4Path, b.startTime, b.endTime-b.startTime));
+            float iStartTime = b.startTime.floatValue();
+            iStartTime /= 1000;
+            float duration = b.endTime.floatValue()-b.startTime.floatValue();
+            duration /= 1000;
+            path.add(videoEditor.executeCutVideoExact(project.videos.get(0).mp4Path, iStartTime, duration));
         }
-        return videoEditor.mergeVideos(path);
+        if(path.size() == 1){
+            return path.get(0);
+        }
+        String output = "";
+        try {
+            MP4Merger.mergeVideos(path,this.getExternalFilesDir(null).getPath()+"/"+project.name+"/"+ project.name +".mp4");
+            output = this.getExternalFilesDir(null).getPath()+"/"+project.name+"/"+ project.name +".mp4";
+            this.path = output;
+            Video video = new Video();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return output;
     }
 }

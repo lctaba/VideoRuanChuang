@@ -1,5 +1,7 @@
 package com.zhaoss.weixinrecorded.activity;
 
+import android.content.Intent;
+import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -9,6 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.projectUtil.BeCutErrorVideoSpan;
+import com.projectUtil.BeCutSubtitleSpan;
 import com.zhaoss.weixinrecorded.adpter.CutVideoAdapter;
 import com.zhaoss.weixinrecorded.R;
 
@@ -46,12 +49,17 @@ public class CutVideoActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
-                if (view instanceof TextView) {
-                    TextView textView = (TextView) view;
+                if (view instanceof View) {
+                    TextView textView=view.findViewById(R.id.video_name);
                     String content = textView.getText().toString();
-
-                    Toast.makeText(CutVideoActivity.this, "点击了 " + content,
+                    Toast.makeText(CutVideoActivity.this, "跳转到 " + content,
                             Toast.LENGTH_SHORT).show();
+
+                    Intent intent = new Intent(CutVideoActivity.this,EditVideoActivity.class);
+                    BeCutErrorVideoSpan myBeSubtitleSpan=myList.get(position);
+                    Long startTime=myBeSubtitleSpan.startTime;
+                    intent.putExtra("startTime",startTime);
+                    startActivity(intent);
                 }
             }
         });
@@ -73,12 +81,30 @@ public class CutVideoActivity extends AppCompatActivity {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view,
                                            int position, long id) {
-                if (view instanceof TextView) {
-                    TextView textView = (TextView) view;
+                if (view instanceof View) {
+                    TextView textView=view.findViewById(R.id.video_name);
                     String content = textView.getText().toString();
 
                     Toast.makeText(CutVideoActivity.this, "长按了 " + content,
                             Toast.LENGTH_SHORT).show();
+
+                    BeCutErrorVideoSpan beCutErrorVideoSpan = myList.get(position);
+
+                    if( beCutErrorVideoSpan.isChecked==false){
+                        Toast.makeText(CutVideoActivity.this, "选中了 " + content,
+                                Toast.LENGTH_SHORT).show();
+                        EditVideoActivity.addErrorVideo(beCutErrorVideoSpan);
+                        textView.setTextColor(Color.rgb(255, 0, 0));
+                        beCutErrorVideoSpan.isChecked=true;
+                        //isDelete[position] = true;
+                    }else {
+                        EditVideoActivity.removeErrorVideo(beCutErrorVideoSpan);
+                        Toast.makeText(CutVideoActivity.this, "取消选中选中了 " + content,
+                                Toast.LENGTH_SHORT).show();
+                        textView.setTextColor(Color.rgb(0, 0, 0));
+                        beCutErrorVideoSpan.isChecked=false;
+                        //isDelete[position] = false;
+                    }
                 }
                 // 返回true，表示将单击事件进行拦截
                 return true;
