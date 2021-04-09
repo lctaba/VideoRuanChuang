@@ -389,7 +389,6 @@ public class RecordedActivity extends BaseActivity {
                         mCameraHelp.getWidth(), mCameraHelp.getHeight(), rotation, isFrontCamera);
 
                 Bitmap bitmap = Bitmap.createBitmap(videoWidth, videoHeight, Bitmap.Config.ARGB_8888);
-
                 LibyuvUtil.convertI420ToBitmap(tempYuvI420, bitmap, videoWidth, videoHeight);
 
                 if(imageHandler.startOrStop(new ImagePiece(bitmap)) != 0){

@@ -17,7 +17,9 @@
             android:windowSoftInputMode="adjustResize|adjustPan" />
         <activity android:name=".activity.CutSizeActivity" />
         <activity android:name=".activity.CutTimeActivity" />
-        <activity android:name=".activity.SelectActivity" />
+        <activity android:name=".activity.SelectActivity"
+            />
+
     </application>
 
 </manifest>
