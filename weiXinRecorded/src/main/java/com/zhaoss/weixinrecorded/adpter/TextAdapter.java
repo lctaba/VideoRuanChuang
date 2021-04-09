@@ -1,6 +1,7 @@
 package com.zhaoss.weixinrecorded.adpter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +26,12 @@ public class TextAdapter extends ArrayAdapter<BeCutSubtitleSpan> {
         View view = LayoutInflater.from(getContext()).inflate(resourceId, parent, false);
         TextView textView=view.findViewById(R.id.video_name);
         textView.setText(beCutSubtitleSpan.toString());
+        if (beCutSubtitleSpan.isChecked==true){
+            textView.setTextColor(Color.rgb(255, 0, 0));
+        }
+        else{
+            textView.setTextColor(Color.rgb(0, 0, 0));
+        }
         return view;
     }
 }

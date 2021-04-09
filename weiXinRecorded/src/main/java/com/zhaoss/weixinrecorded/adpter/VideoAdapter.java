@@ -32,8 +32,6 @@ public class VideoAdapter extends ArrayAdapter<Project> {
         textView.setText(project.toString());
         return view;
 
-
-
     }
 
 }

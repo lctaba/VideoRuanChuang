@@ -16,10 +16,6 @@ import java.io.File;
  * }else{
  * 		//执行失败.....(大部分是视频路径不对,或Android6.0及以上设备没有打开权限导致)
  * }
- *
- *
- * 杭州蓝松科技有限公司
- * www.lansongtech.com
  */
 public class MediaInfo {
 

@@ -41,7 +41,6 @@ public class MainActivity extends AppCompatActivity {
 
         Button button_add = findViewById(R.id.button3);
         Button button_select = findViewById(R.id.button4);
-        Button button_audioRecognition = findViewById(R.id.button5);
         button_add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -80,12 +79,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        button_audioRecognition.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AudioToText.getMessage(getExternalFilesDir(null).getPath()+"/1617115770082/21330224941215.m4a");
-            }
-        });
 
 
     }

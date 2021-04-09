@@ -1015,6 +1015,8 @@ public class VideoEditor {
 
     public String mergeVideos(List<String> path){
         List<String> cmdList = new ArrayList<String>();
+        cmdList.add("-vcodec");
+        cmdList.add("lansoh264_dec");
         cmdList.add("-i");
         StringBuilder stringBuilder = new StringBuilder();
         for(String s : path){
@@ -1026,20 +1028,22 @@ public class VideoEditor {
         }
         cmdList.add(stringBuilder.toString());
         cmdList.add("-c");
+        cmdList.add("-acodec");
         cmdList.add("copy");
-        String dstFile= LanSongFileUtil.createMp4FileInBox();
-        cmdList.add(dstFile);
-        String[] command = new String[cmdList.size()];
-        for (int i = 0; i < cmdList.size(); i++) {
-            command[i] = (String) cmdList.get(i);
-        }
-        int ret= executeVideoEditor(command);
-        if(ret==0){
-            return dstFile;
-        }else{
-            LanSongFileUtil.deleteFile(dstFile);
-            return null;
-        }
+        return executeAutoSwitch(cmdList);
+//        String dstFile= LanSongFileUtil.createMp4FileInBox();
+//        cmdList.add(dstFile);
+//        String[] command = new String[cmdList.size()];
+//        for (int i = 0; i < cmdList.size(); i++) {
+//            command[i] = (String) cmdList.get(i);
+//        }
+//        int ret= executeVideoEditor(command);
+//        if(ret==0){
+//            return dstFile;
+//        }else{
+//            LanSongFileUtil.deleteFile(dstFile);
+//            return null;
+//        }
     }
 
     /**

@@ -8,6 +8,7 @@ public class BeCutErrorVideoSpan {
     public Long startTime;
     public Long endTime;
     public ErrorType errorType;
+    public boolean isChecked = false;
 
     public BeCutErrorVideoSpan() {
     }
