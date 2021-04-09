@@ -23,11 +23,6 @@ import java.util.Calendar;
 
 /**
  * 各种文件操作.
- *
- *
- * 杭州蓝松科技有限公司
- * www.lansongtech.com
- *
  */
 public class LanSongFileUtil {
 

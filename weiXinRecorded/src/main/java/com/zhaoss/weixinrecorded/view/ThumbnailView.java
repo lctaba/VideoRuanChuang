@@ -15,9 +15,7 @@ import android.view.View;
 
 import com.zhaoss.weixinrecorded.R;
 
-/**
- * Created by zhaoshuang on 17/8/22.
- */
+
 
 public class ThumbnailView extends View {
 

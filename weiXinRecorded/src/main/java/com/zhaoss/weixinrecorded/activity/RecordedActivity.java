@@ -52,11 +52,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import static android.hardware.Camera.Parameters.FLASH_MODE_OFF;
 import static android.hardware.Camera.Parameters.FLASH_MODE_ON;
 
-  /**
- * 仿微信录制视频
- * 基于ffmpeg视频编译
- * Created by zhaoshuang on 19/6/18.
- */
+
 public class RecordedActivity extends BaseActivity {
 
     public static final String INTENT_PATH = "intent_path";

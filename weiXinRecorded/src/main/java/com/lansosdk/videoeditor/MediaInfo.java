@@ -14,7 +14,7 @@ import java.io.File;
  * if(info.prepare()){ //<==============主要是这里, 需要执行以下,
  * 		//可以使用MediaInfo中的各种成员变量, 比如vHeight, vWidth vBitrate等等.
  * }else{
- * 		//执行失败.....(大部分是视频路径不对,或Android6.0及以上设备没有打开权限导致)
+ * 		//执行失败.....
  * }
  */
 public class MediaInfo {
@@ -438,16 +438,4 @@ public class MediaInfo {
 		else
 			return "";
 	}
-	/*
-	 * ****************************************************************************
-	 * 测试 // new Thread(new Runnable() { // // @Override // public void run() {
-	 * // // TODO Auto-generated method stub // MediaInfo mif=new
-	 * MediaInfo("/sdcard/2x.mp4"); //这里是我们的测试视频地址, 如您测试, 则需要修改视频地址. //
-	 * mif.prepare(); // Log.i(TAG,"mif is:"+ mif.toString()); // mif.release();
-	 * // } // },"testMediaInfo#1").start(); // new Thread(new Runnable() { //
-	 * // @Override // public void run() { // // TODO Auto-generated method stub
-	 * // MediaInfo mif=new MediaInfo("/sdcard/2x.mp4");//这里是我们的测试视频地址, 如您测试,
-	 * 则需要修改视频地址. // mif.prepare(); // Log.i(TAG,"mif is:"+ mif.toString()); //
-	 * mif.release(); // } // },"testMediaInfo#2").start();
-	 */
 }

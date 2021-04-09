@@ -1,9 +1,6 @@
 package com.projectUtil;
 
-/**
- * @Author cyh
- * @Date 2021/4/4 20:08
- */
+
 public class BeCutVideoSpan {
     public Long startTime;
     public Long endTime;

@@ -14,10 +14,6 @@ import com.zhaoss.weixinrecorded.R;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by zhaoshuang on 16/12/14.
- * 手绘涂鸦界面
- */
 
 public class TuyaView extends View {
 

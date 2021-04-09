@@ -19,9 +19,7 @@ import com.zhaoss.weixinrecorded.R;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by zhaoshuang on 17/2/8.
- */
+
 
 public class RecordedButton extends View {
 

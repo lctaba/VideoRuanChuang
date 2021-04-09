@@ -11,9 +11,6 @@ import android.view.SurfaceHolder;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by zhaoshuang on 2018/7/20.
- */
 
 public class CameraHelp {
 

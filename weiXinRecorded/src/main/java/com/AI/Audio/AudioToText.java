@@ -17,10 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 
-/**
- * @Author cyh
- * @Date 2021/3/30 21:47
- */
+
 public class AudioToText {
     public static final String HOST = "https://raasr.xfyun.cn/api";
     public static final String APP_ID = "ab825553";

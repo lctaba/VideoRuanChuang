@@ -13,10 +13,6 @@ import java.util.List;
 
 /**
  * android logcat收集器
- *
- *
- * 杭州蓝松科技有限公司
- * www.lansongtech.com
  */
 public class LanSongLogCollector implements Runnable {
     private static final String TAG = "LanSongLogCollector";

@@ -15,10 +15,6 @@ import io.reactivex.functions.Predicate;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 
-/**
- * Created by zhaoshuang on 2018/7/13.
- * 封装一下RxJava, 更易用
- */
 
 public class RxJavaUtil {
 

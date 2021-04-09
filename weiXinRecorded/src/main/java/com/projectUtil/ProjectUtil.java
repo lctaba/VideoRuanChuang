@@ -30,10 +30,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-/**
- * @Author cyh
- * @Date 2021/3/20 13:32
- */
+
 public class ProjectUtil {
     //public static String PROJECT_PATH = "/sdcard/WeiXinRecorded/";
 

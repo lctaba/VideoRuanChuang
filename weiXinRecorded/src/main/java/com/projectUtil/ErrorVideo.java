@@ -3,10 +3,7 @@ package com.projectUtil;
 import java.io.Serializable;
 import java.security.acl.LastOwnerException;
 
-/**
- * @Author cyh
- * @Date 2021/3/20 14:31
- */
+
 public class ErrorVideo implements Serializable {
     public Long startTime;
     public Long endTime;

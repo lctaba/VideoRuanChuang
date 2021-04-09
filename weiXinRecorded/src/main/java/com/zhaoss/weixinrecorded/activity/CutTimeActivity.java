@@ -33,9 +33,7 @@ import java.io.File;
 
 import io.reactivex.disposables.Disposable;
 
-/**
- * Created by zhaoshuang on 2017/9/30.
- */
+
 
 public class CutTimeActivity extends BaseActivity{
 

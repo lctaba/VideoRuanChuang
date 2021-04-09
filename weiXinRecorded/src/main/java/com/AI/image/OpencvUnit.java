@@ -21,10 +21,7 @@ import static org.bytedeco.javacpp.opencv_imgproc.Sobel;
 import static org.bytedeco.javacpp.opencv_imgproc.cvtColor;
 
 
-/**
- * @Author cyh+
- * @Date 2021/3/29 14:24
- */
+
 public class OpencvUnit {
     /**
      * 对原图像梯度化，计算梯度值，梯度值越高，图片越清晰
