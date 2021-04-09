@@ -13,7 +13,9 @@ import android.graphics.SurfaceTexture;
 import android.graphics.drawable.BitmapDrawable;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -65,6 +67,8 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.TreeMap;
+
+import static android.media.MediaPlayer.SEEK_CLOSEST;
 
 
 /**
@@ -126,8 +130,8 @@ public class EditVideoActivity extends BaseActivity {
     private float executeProgress;//编译进度
     private MediaPlayer mMediaPlayer;
     //项目对象
-    private Project project;
-    private String audioPath;
+    public static Project project;
+    public static String audioPath;
     //被裁剪的对象列表 (key = start , value = end)
     private Map<Long,Long> beCutVideoSpans;
     //所有字幕片段
@@ -155,11 +159,13 @@ public class EditVideoActivity extends BaseActivity {
         windowWidth = Utils.getWindowWidth(mContext);
         windowHeight = Utils.getWindowHeight(mContext);
 
-        project = new Project((Project) getIntent().getSerializableExtra("project"));
-        audioPath = project.videos.get(0).aacPath;
-        allClips = new ArrayList<>();
-        allErrorVideo = new ArrayList<>();
-        beCutVideoSpans = new TreeMap<>();
+        if(project == null){
+            project = (Project) getIntent().getSerializableExtra("project");
+            audioPath = project.videos.get(0).aacPath;
+            allClips = new ArrayList<>();
+            allErrorVideo = new ArrayList<>();
+            beCutVideoSpans = new TreeMap<>();
+        }
         initUI();
         initData();
         initVideoSize();
@@ -429,9 +435,10 @@ public class EditVideoActivity extends BaseActivity {
     }
 
     private void initData() {
-
+        /*
         Intent intent = getIntent();
-        path = intent.getStringExtra(RecordedActivity.INTENT_PATH);
+        path = intent.getStringExtra(RecordedActivity.INTENT_PATH);*/
+        path = project.videos.get(0).mp4Path;
 
         //当进行涂鸦操作时, 隐藏标题栏和底部工具栏
         tv_video.setOnTouchListener(new TuyaView.OnTouchListener() {
@@ -461,22 +468,29 @@ public class EditVideoActivity extends BaseActivity {
     }
 
     private void initMediaPlay(SurfaceTexture surface){
+
+
         try {
             mMediaPlayer = new MediaPlayer();
             mMediaPlayer.setDataSource(path);
 
-
             mMediaPlayer.setSurface(new Surface(surface));
             mMediaPlayer.setLooping(true);
+
             mMediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                @RequiresApi(api = Build.VERSION_CODES.O)
                 @Override
                 public void onPrepared(MediaPlayer mp) {
                     mMediaPlayer.start();
+                    if(getIntent().getLongExtra("startTime",-1) != -1){
+                        Long startTime=getIntent().getLongExtra("startTime",-1);
+                        mMediaPlayer.seekTo(startTime, SEEK_CLOSEST );
+                        mMediaPlayer.stop();
+                    }
+
                 }
             });
             mMediaPlayer.prepareAsync();
-
-
 
         }catch (Exception e){
             e.printStackTrace();
@@ -548,7 +562,8 @@ public class EditVideoActivity extends BaseActivity {
                     videoPath = mergeImage(path);
                 }
                 if (isSpeed) {
-                    videoPath = myVideoEditor.executeAdjustVideoSpeed2(path, videoSpeed);
+                    videoPath =
+                            myVideoEditor.executeAdjustVideoSpeed2(path, videoSpeed);
                 }
                 return videoPath;
             }

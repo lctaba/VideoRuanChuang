@@ -1,5 +1,6 @@
 package com.zhaoss.weixinrecorded.activity;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -53,6 +54,11 @@ public class TextActivity extends AppCompatActivity {
 
                     Toast.makeText(TextActivity.this, "点击了 " + content,
                             Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(TextActivity.this,EditVideoActivity.class);
+                    BeCutSubtitleSpan myBeSubtitleSpan=mylist.get(position);
+                    Long startTime=myBeSubtitleSpan.startTime;
+                    intent.putExtra("startTime",startTime);
+                    startActivity(intent);
                 }
             }
         });
