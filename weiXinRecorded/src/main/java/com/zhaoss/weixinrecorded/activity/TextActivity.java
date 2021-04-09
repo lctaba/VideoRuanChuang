@@ -72,11 +72,11 @@ public class TextActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
-                if (view instanceof TextView) {
+                if (view instanceof View) {
                     TextView textView=view.findViewById(R.id.video_name);
                     String content = textView.getText().toString();
 
-                    Toast.makeText(TextActivity.this, "点击了 " + content,
+                    Toast.makeText(TextActivity.this, "跳转到 " + content,
                             Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(TextActivity.this,EditVideoActivity.class);
                     BeCutSubtitleSpan myBeSubtitleSpan=mylist.get(position);
@@ -107,16 +107,22 @@ public class TextActivity extends AppCompatActivity {
                 if (view instanceof View) {
                     TextView textView=view.findViewById(R.id.video_name);
                     String content = textView.getText().toString();
-                    Toast.makeText(TextActivity.this, "长按了 " + content,
-                            Toast.LENGTH_SHORT).show();
+
                     BeCutSubtitleSpan myBeSubtitleSpan=mylist.get(position);
-                    if( textView.getCurrentTextColor() != Color.rgb(255, 0, 0)){
+
+                    if( myBeSubtitleSpan.isChecked==false){
+                        Toast.makeText(TextActivity.this, "选中了 " + content,
+                                Toast.LENGTH_SHORT).show();
                         EditVideoActivity.addBeCutVideoSpan(myBeSubtitleSpan);
                         textView.setTextColor(Color.rgb(255, 0, 0));
+                        myBeSubtitleSpan.isChecked=true;
                         //isDelete[position] = true;
                     }else {
                         EditVideoActivity.removeBeCutVideoSpan(myBeSubtitleSpan);
+                        Toast.makeText(TextActivity.this, "取消选中选中了 " + content,
+                                Toast.LENGTH_SHORT).show();
                         textView.setTextColor(Color.rgb(0, 0, 0));
+                        myBeSubtitleSpan.isChecked=false;
                         //isDelete[position] = false;
                     }
                 }

@@ -507,6 +507,7 @@ public class EditVideoActivity extends BaseActivity {
                         Long startTime=getIntent().getLongExtra("startTime",-1);
                         mMediaPlayer.seekTo(startTime, SEEK_CLOSEST );
                         mMediaPlayer.pause();
+                        imageButtonStop.setBackgroundResource(R.drawable.ic_baseline_not_started_24);
                         imageButtonStop.setVisibility(View.VISIBLE);
 
                     }

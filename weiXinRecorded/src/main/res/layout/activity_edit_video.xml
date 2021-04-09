@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/ic_baseline_not_started_24"
     android:orientation="vertical">
 
     <RelativeLayout
@@ -230,7 +229,7 @@
                     android:layout_height="34dp"
                     android:layout_alignParentStart="true"
                     android:layout_alignParentTop="true"
-                    android:layout_marginStart="4dp"
+                    android:layout_marginStart="6dp"
                     android:layout_marginTop="553dp"
                     android:background="@drawable/ic_baseline_stop_circle_24"
                     android:visibility="visible"
@@ -243,7 +242,7 @@
                     android:layout_alignParentEnd="true"
                     android:layout_marginStart="0dp"
                     android:layout_marginTop="550dp"
-                    android:layout_marginEnd="8dp" />
+                    android:layout_marginEnd="10dp" />
 
                 <ProgressBar
                     android:id="@+id/progressBar"
