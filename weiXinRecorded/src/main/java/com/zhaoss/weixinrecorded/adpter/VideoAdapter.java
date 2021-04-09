@@ -1,4 +1,4 @@
-package com.projectUtil;
+package com.zhaoss.weixinrecorded.adpter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -8,6 +8,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.projectUtil.Project;
 import com.zhaoss.weixinrecorded.R;
 
 import java.util.List;
