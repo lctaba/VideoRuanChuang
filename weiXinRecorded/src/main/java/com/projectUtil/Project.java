@@ -17,6 +17,12 @@ public class Project implements Serializable {
     //项目的名称
     public String name;
 
+    public Project(Project project) {
+        this.name = project.name;
+        this.videos = new ArrayList<>(project.videos);
+        this.videoClips = new ArrayList<>(project.videoClips);
+    }
+
     public Project(String name) {
         this.name = name;
         videoClips = new ArrayList<>();
@@ -26,5 +32,10 @@ public class Project implements Serializable {
     public Project() {
         videoClips = new ArrayList<>();
         videos = new ArrayList<>();
+    }
+
+    @Override
+    public String toString() {
+        return name;
     }
 }

@@ -40,8 +40,8 @@
                 android:layout_height="match_parent"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentBottom="true"
-                android:layout_marginEnd="2dp"
-                android:layout_marginBottom="0dp">
+                android:layout_marginEnd="1dp"
+                android:layout_marginBottom="1dp">
 
                 <LinearLayout
                     android:id="@+id/ll_bottom"
@@ -230,8 +230,7 @@
                     android:layout_height="50dp"
                     android:layout_marginStart="0dp"
                     android:layout_marginTop="550dp"
-                    android:layout_marginEnd="1dp"
-                   />
+                    android:layout_marginEnd="1dp" />
 
                 <TextView
                     android:id="@+id/textView2"
@@ -247,15 +246,14 @@
 
                 <ProgressBar
                     android:id="@+id/progressBar"
-                    android:layout_width="0dp"
-                    android:layout_height="2dp"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
                     android:layout_gravity="center"
                     android:layout_marginStart="32dp"
                     android:layout_marginTop="64dp"
                     android:layout_marginEnd="32dp"
                     android:layout_marginBottom="64dp"
-                    android:visibility="gone"
-                     />
+                    android:visibility="gone" />
 
             </RelativeLayout>
 
