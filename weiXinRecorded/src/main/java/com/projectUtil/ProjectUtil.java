@@ -310,13 +310,13 @@ public class ProjectUtil {
                 String errorVideoPropertyName = errorVideoProperty.getNodeName();
                 switch (errorVideoPropertyName){
                     case "start":
-                        e.startTime = Long.parseLong(errorVideoProperty.getNodeValue());
+                        e.startTime = Long.parseLong(errorVideoProperty.getFirstChild().getNodeValue());
                         break;
                     case "end":
-                        e.endTime = Long.parseLong(errorVideoProperty.getNodeValue());
+                        e.endTime = Long.parseLong(errorVideoProperty.getFirstChild().getNodeValue());
                         break;
                     case "errorType":
-                        e.errorType = ErrorType.valueOf(errorVideoProperty.getNodeValue());
+                        e.errorType = ErrorType.valueOf(errorVideoProperty.getFirstChild().getNodeValue());
                         break;
                     default:
                         break;
@@ -342,13 +342,13 @@ public class ProjectUtil {
                 String subtitlePropertyName = subtitleProperty.getNodeName();
                 switch (subtitlePropertyName){
                     case "start":
-                        s.startTime = Long.parseLong(subtitleProperty.getNodeValue());
+                        s.startTime = Long.parseLong(subtitleProperty.getFirstChild().getNodeValue());
                         break;
                     case "end":
-                        s.endTime = Long.parseLong(subtitleProperty.getNodeValue());
+                        s.endTime = Long.parseLong(subtitleProperty.getFirstChild().getNodeValue());
                         break;
                     case "text":
-                        s.subtitle = subtitleProperty.getNodeValue();
+                        s.subtitle = subtitleProperty.getFirstChild().getNodeValue();
                         break;
                     default:
                         break;
@@ -370,10 +370,10 @@ public class ProjectUtil {
             String spanPropertyName = spanProperty.getNodeName();
             switch (spanPropertyName){
                 case "start":
-                    vc.startTime = Long.parseLong(spanProperty.getNodeValue());
+                    vc.startTime = Long.parseLong(spanProperty.getFirstChild().getNodeValue());
                     break;
                 case "end":
-                    vc.endTime = Long.parseLong(spanProperty.getNodeValue());
+                    vc.endTime = Long.parseLong(spanProperty.getFirstChild().getNodeValue());
                     break;
                 default:
                     break;
@@ -395,15 +395,15 @@ public class ProjectUtil {
                 case "name":
                     Video video = new Video();
                     NodeList pathList = belongToProperty.getChildNodes();
-                    video.h264Path = pathList.item(1).getNodeValue();
-                    video.mp4Path = pathList.item(2).getNodeValue();
-                    video.aacPath = pathList.item(3).getNodeValue();
+                    video.h264Path = pathList.item(1).getFirstChild().getNodeValue();
+                    video.mp4Path = pathList.item(2).getFirstChild().getNodeValue();
+                    video.aacPath = pathList.item(3).getFirstChild().getNodeValue();
                     break;
                 case "start":
-                    vc.relativeStartTime = Long.parseLong(belongToProperty.getNodeValue());
+                    vc.relativeStartTime = Long.parseLong(belongToProperty.getFirstChild().getNodeValue());
                     break;
                 case "end":
-                    vc.relativeEndTime = Long.parseLong(belongToProperty.getNodeValue());
+                    vc.relativeEndTime = Long.parseLong(belongToProperty.getFirstChild().getNodeValue());
                     break;
                 default:
                     break;
@@ -422,9 +422,9 @@ public class ProjectUtil {
             Node item = materials.item(j);
             NodeList pathList = item.getChildNodes();
             Video video = new Video();
-            video.h264Path = pathList.item(1).getNodeValue();
-            video.mp4Path = pathList.item(2).getNodeValue();
-            video.aacPath = pathList.item(3).getNodeValue();
+            video.h264Path = pathList.item(0).getFirstChild().getNodeValue();
+            video.mp4Path = pathList.item(1).getFirstChild().getNodeValue();
+            video.aacPath = pathList.item(2).getFirstChild().getNodeValue();
             project.videos.add(video);
         }
     }
