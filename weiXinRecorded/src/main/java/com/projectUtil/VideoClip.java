@@ -4,10 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * @Author cyh
- * @Date 2021/3/20 14:15
- */
+
 public class VideoClip implements Serializable {
     //视频片段在项目中的开始时间与结束时间（绝对时间）
     public Long startTime;

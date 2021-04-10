@@ -1,10 +1,6 @@
 package com.lansosdk.videoeditor;
 
-/**
- *
- * 杭州蓝松科技有限公司
- * www.lansongtech.com
- */
+
 
 public class VideoLayoutParam {
 

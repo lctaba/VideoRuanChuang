@@ -79,10 +79,7 @@ import java.util.TreeMap;
 import static android.media.MediaPlayer.SEEK_CLOSEST;
 
 
-/**
- * Created by zhaoshuang on 17/2/21.
- * 视频编辑界面
- */
+
 
 public class EditVideoActivity extends BaseActivity {
 
@@ -1131,6 +1128,10 @@ public class EditVideoActivity extends BaseActivity {
      * 加载所有的错误片段
      */
     public void refreshAllErrorVideo(){
+        if(project.videoClips == null || project.videoClips.size() == 0){
+            allErrorVideo = new ArrayList<>();
+            return;
+        }
         List<ErrorVideo> errorVideos = project.videoClips.get(0).errorVideos;
         Long startTime = project.videoClips.get(0).startTime;
         List<BeCutErrorVideoSpan> beCutErrorVideoSpans = new ArrayList<>();

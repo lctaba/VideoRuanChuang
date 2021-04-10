@@ -22,9 +22,7 @@ import com.zhaoss.weixinrecorded.util.RxJavaUtil;
 import com.zhaoss.weixinrecorded.util.Utils;
 import com.zhaoss.weixinrecorded.view.CutView;
 
-/**
- * Created by zhaoshuang on 17/3/21.
- */
+
 
 public class CutSizeActivity extends BaseActivity implements View.OnClickListener{
 

@@ -12,9 +12,7 @@ import android.widget.TextView;
 
 import com.zhaoss.weixinrecorded.R;
 
-/**
- * Created by zhaoshuang on 17/2/23.
- */
+
 
 public abstract class BaseActivity extends Activity {
 

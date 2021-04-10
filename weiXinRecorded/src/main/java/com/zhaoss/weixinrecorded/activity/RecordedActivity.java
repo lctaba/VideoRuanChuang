@@ -52,11 +52,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import static android.hardware.Camera.Parameters.FLASH_MODE_OFF;
 import static android.hardware.Camera.Parameters.FLASH_MODE_ON;
 
-  /**
- * 仿微信录制视频
- * 基于ffmpeg视频编译
- * Created by zhaoshuang on 19/6/18.
- */
+
 public class RecordedActivity extends BaseActivity {
 
     public static final String INTENT_PATH = "intent_path";
@@ -389,7 +385,6 @@ public class RecordedActivity extends BaseActivity {
                         mCameraHelp.getWidth(), mCameraHelp.getHeight(), rotation, isFrontCamera);
 
                 Bitmap bitmap = Bitmap.createBitmap(videoWidth, videoHeight, Bitmap.Config.ARGB_8888);
-
                 LibyuvUtil.convertI420ToBitmap(tempYuvI420, bitmap, videoWidth, videoHeight);
 
                 if(imageHandler.startOrStop(new ImagePiece(bitmap)) != 0){

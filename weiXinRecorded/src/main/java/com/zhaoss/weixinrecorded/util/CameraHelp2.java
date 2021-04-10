@@ -30,9 +30,6 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 
-/**
- * Created by zhaoshuang on 2018/7/20.
- */
 
 public class CameraHelp2 {
 

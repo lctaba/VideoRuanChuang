@@ -20,12 +20,9 @@ import java.util.Locale;
  *
  * 每个输入视频的路径,都可以是一张图片.图片支持png, jpg, tif格式.
  *
- * 杭州蓝松科技有限公司
- * www.lansongtech.com
  */
 public class VideoLayout extends VideoEditor {
 
-    //2018年5月29日16:52:43增加音频;
 
     private static final String TAG = LSLog.TAG;
 

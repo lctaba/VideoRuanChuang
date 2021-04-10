@@ -35,9 +35,6 @@ import static com.lansosdk.videoeditor.LanSongFileUtil.fileExist;
  * 然后在AsyncTask或Thread中执行如下;
  * veditor.executeXXXXX();
  *
- *
- * 杭州蓝松科技有限公司
- * www.lansongtech.com
  */
 public class VideoEditor {
 
@@ -1694,7 +1691,6 @@ public class VideoEditor {
     }
 
     /**
-     * 缩放的同时增加logo水印.
      *
      * @param videoFile 原视频路径
      * @param pngPath  增加图片路径
