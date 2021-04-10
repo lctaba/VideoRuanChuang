@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">MoocHelper</string>
+    <string name="Warning">注意事项</string>
+    <string name="WarningContains_1">1.目前在使用官方的测试手机进行测试时，AIUnitService总是自动断开连接，测试机型华为p30pro可以使用AIUnitService，不过需要提前打开AIUnitService。</string>
+    <string name="WarningContains_2">2.需要手动给应用相机、麦克风与内存读写文件权限，否则无法录制视频。</string>
+    <string name="WarningContains_3">3.操作时请耐心等待，语音识别与视频裁剪都需要一定时间，多次点击可能导致程序崩溃。</string>
+    <string name="WarinigContains_4">4.安卓11的Android data路径被保护了无法查看，可下载mt管理器查看输出的结果。</string>
 </resources>
